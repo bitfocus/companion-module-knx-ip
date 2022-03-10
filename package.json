@@ -1,0 +1,21 @@
+{
+	"name": "knxip",
+	"version": "1.0.0",
+	"api_version": "1.0.0",
+	"description": "StreamDeck Companion Module for KNX-IP",
+	"main": "index.js",
+	"author": "Peter Körner <pkoerner@seibert-media.net>",
+	"license": "MIT",
+	"keywords": [
+		"KNX",
+		"IP",
+		"Automation"
+	],
+	"manufacturer": "KNX Association",
+	"product": "KNX-IP",
+	"shortname": "knx-ip",
+	"dependencies": {
+		"async-exit-hook": "^2.0.1",
+		"knx": " https://pkoerner@bitbucket.org/pkoerner/knx.js.git#reliable-disconnect"
+	}
+}
