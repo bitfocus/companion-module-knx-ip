@@ -60,6 +60,7 @@ class KnxIpConnection {
 	disconnect(cb) {
 		if (this.isConnected || this.isConnecting) {
 			this.log('🟧 disconnecting')
+			this.connection.off() // Unlink all Event-Listeners
 			this.connection.Disconnect(() => {
 					this.onDisconnected()
 					if (cb) cb();
