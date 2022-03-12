@@ -16,6 +16,6 @@
 	"shortname": "knx-ip",
 	"dependencies": {
 		"async-exit-hook": "^2.0.1",
-		"knx": " https://pkoerner@bitbucket.org/pkoerner/knx.js.git#reliable-disconnect"
+		"knx": "^2.5.0"
 	}
 }
