@@ -23,16 +23,18 @@ export class Instance extends InstanceSkel<Config> {
 	destroy(): void {
 		this.log('debug', '⏯ destroying')
 		if (this.connection) {
-			this.connection.disconnect().then(() => {
-				this.log('debug', '⏸ destroyed')
-			})
+			this.connection.disconnect()
 		}
 	}
 
 	updateConfig(config: Config): void {
 		this.log('debug', '🔁 updateConfig=' + JSON.stringify(config))
-		if (config.ipAddr && this.connection) {
-			this.connection.connect(config.ipAddr)
+		if (this.connection) {
+			if (config.ipAddr) {
+				this.connection.connect(config.ipAddr)
+			} else {
+				this.connection.disconnect()
+			}
 		}
 	}
 
