@@ -28,19 +28,23 @@ interface FieldBase {
 	label: string;
 }
 
-interface BooleanField extends FieldBase {
+export interface BooleanField extends FieldBase {
 	type: 'boolean'
 	booleanLabels: [string, string]
 }
 
-interface NumberField extends FieldBase {
+export interface NumberField extends FieldBase {
 	type: 'number'
 	numberRange: [number, number]
-	projectedRange: [number, number]
-	unit: string
+	projectedRange?: [number, number]
+	unit?: string
 }
 
-export type Field = BooleanField | NumberField;
+export interface TextField extends FieldBase {
+	type: 'text'
+}
+
+export type Field = BooleanField | NumberField | TextField;
 
 // DPTs
 interface DPTBase {

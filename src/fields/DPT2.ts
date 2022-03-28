@@ -17,6 +17,6 @@ export const DPT2: BooleanDPT = {
 		id: 'priority',
 		label: 'Priority',
 		type: 'boolean',
-		booleanLabels: ['High', 'Low'],
+		booleanLabels: ['Control', 'No Control'],
 	}]
 }
