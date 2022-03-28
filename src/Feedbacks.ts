@@ -1,6 +1,6 @@
 import {CompanionFeedbackEvent, CompanionFeedbacks} from '../../../instance_skel_types'
 import {rgb} from './Color'
-import {DPT_SELECT_FIELD, GROUP_ADDR_FIELD} from './Fields'
+import {DPT_FEEDBACK_FIELDS, GROUP_ADDR_FIELD} from './Fields'
 
 export const FEEDBACKS: CompanionFeedbacks = {
 	recv: {
@@ -15,8 +15,7 @@ export const FEEDBACKS: CompanionFeedbacks = {
 		},
 		options: [
 			GROUP_ADDR_FIELD,
-			DPT_SELECT_FIELD
-			// TODO add compare-value (DPT dependent) - equality, min or max
+			...DPT_FEEDBACK_FIELDS,
 		],
 		callback: (feedback: CompanionFeedbackEvent) => {
 			console.log('checkFeedback', feedback)

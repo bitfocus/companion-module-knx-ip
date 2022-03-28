@@ -1,0 +1,9 @@
+At first glance this looks like it could come from DPT-Lib of knx.js (https://bitbucket.org/ekarak/knx.js/src/master/src/dptlib/)
+and this is certainly true for the boolean DPTs, but for all other DPTs knx.js dptlib misses
+a bunch of information in a machine readable format:
+ - actual ranges of the number subtypes
+ - select-options and structure for composite types (DPT2, DPT3, ...)
+and it also contains some not fully implemented DPTs.
+
+Upon closer inspection it can not really be used to create the requisite Configuration-Fields required in the Compositor GUI,
+some of the information from the knx.js lib is replicated here, extended and re-formatted to create the Configuration-Fields from it.

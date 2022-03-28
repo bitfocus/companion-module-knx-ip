@@ -64,10 +64,9 @@ ipaddr.js@1.2.0:
   resolved "https://registry.yarnpkg.com/ipaddr.js/-/ipaddr.js-1.2.0.tgz#8aba49c9192799585bdd643e0ccb50e8ae777ba4"
   integrity sha1-irpJyRknmVhb3WQ+DMtQ6K53e6Q=
 
-knx@^2.5.0:
+"knx@https://pkoerner@bitbucket.org/pkoerner/knx.js.git":
   version "2.5.0"
-  resolved "https://registry.yarnpkg.com/knx/-/knx-2.5.0.tgz#b0b9649e0abe365e83ac01b197e1f5473a60f58a"
-  integrity sha512-2zrtm1NCg5tUjKnfYkkXIaJKOn2KJiGVDKPoRXGc1uoMdUK0G97VGSiFgYIMB3QA0hYeZAosLFTIwiNMTrnWCw==
+  resolved "https://pkoerner@bitbucket.org/pkoerner/knx.js.git#a14f8b943d95e748579ee3ac14b1bca68875e109"
   dependencies:
     "@types/node" "^6.14.4"
     binary-parser "1.1.5"
