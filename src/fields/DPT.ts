@@ -20,7 +20,7 @@ import {DPT5} from './DPT5'
 
 
 export type FieldValues = { [key: string]: any }
-export type ValueFunction = (value: string, otherFields: FieldValues) => any;
+export type ValueFunction = (value: any, extraFields: FieldValues, dpt: DPT, subtype: Subtype) => any;
 
 // Field Specs
 interface FieldBase {
@@ -37,6 +37,7 @@ export interface NumberField extends FieldBase {
 	type: 'number'
 	numberRange: [number, number]
 	projectedRange?: [number, number]
+	step?: number
 	unit?: string
 }
 
@@ -74,6 +75,7 @@ export interface NumberDPT extends DPTBase {
 	type: 'number'
 	numberRange: [number, number]
 	projectedRange?: [number, number]
+	step?: number
 	unit?: string
 	subtypes?: NumberSubtype[]
 }
@@ -81,6 +83,7 @@ export interface NumberDPT extends DPTBase {
 export interface NumberSubtype extends SubtypeBase {
 	numberRange?: [number, number]
 	projectedRange?: [number, number]
+	step?: number
 	unit?: string
 }
 

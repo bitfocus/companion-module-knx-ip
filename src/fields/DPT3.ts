@@ -9,9 +9,9 @@ export const DPT3: NumberDPT = {
 	numberRange: [0, 7],
 	projectedRange: [0, 100],
 	unit: '%',
-	valueFn: (value, otherFields) => ({
-		data: parseInt(value),
-		decr_incr: otherFields['decr_incr'] === '1'
+	valueFn: (value, extraFields) => ({
+		data: value,
+		decr_incr: extraFields['decr_incr'] === '1'
 	}),
 	extraFields: [{
 		id: 'decr_incr',
