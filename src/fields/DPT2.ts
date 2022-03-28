@@ -7,7 +7,7 @@ export const DPT2: BooleanDPT = {
 	type: 'boolean',
 	booleanLabels: DPT1.booleanLabels,
 	id: 'DPT2',
-	label: '1-bit value with priority',
+	label: '1-bit with Priority',
 	valueFn: (value, otherFields) => ({
 		data: value === '1',
 		priority: otherFields['priority'] === '1'

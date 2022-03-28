@@ -23,7 +23,7 @@
 	"shortname": "knx-ip",
 	"dependencies": {
 		"async-exit-hook": "^2.0.1",
-		"knx": "https://pkoerner@bitbucket.org/pkoerner/knx.js.git"
+		"knx": "^2.5.1"
 	},
 	"devDependencies": {
 		"@types/node": "^12.20.19",

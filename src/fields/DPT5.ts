@@ -5,7 +5,7 @@ import {NumberDPT} from './DPT'
 export const DPT5: NumberDPT = {
 	type: 'number',
 	id: 'DPT5',
-	label: '8-bit unsigned value',
+	label: '8-bit Unsigned',
 	numberRange: [0, 255],
 	valueFn: (value) => value,
 	subtypes: [
@@ -27,14 +27,14 @@ export const DPT5: NumberDPT = {
 		}, {
 			id: '005',
 			label: 'Ratio',
-			unit: 'ratio'
+			unit: 'Ratio'
 		}, {
 			id: '006',
 			label: 'Tarif'
 		}, {
 			id: '007',
 			label: 'Counter Pulses',
-			unit: 'pulses'
+			unit: 'Pulses'
 		}
 	]
 }

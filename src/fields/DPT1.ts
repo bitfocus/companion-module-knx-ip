@@ -4,7 +4,7 @@ import {BooleanDPT} from './DPT'
 // Chapter 3.1
 export const DPT1: BooleanDPT = {
 	id: 'DPT1',
-	label: '1-bit value',
+	label: '1-bit',
 	type: 'boolean',
 	booleanLabels: ['False', 'True'],
 	valueFn: (value) => value === '1',

@@ -5,7 +5,7 @@ import {NumberDPT} from './DPT'
 export const DPT3: NumberDPT = {
 	type: 'number',
 	id: 'DPT3',
-	label: '4-bit dimming/blinds control',
+	label: '4-bit Dimming/Blinds control',
 	numberRange: [0, 7],
 	projectedRange: [0, 100],
 	unit: '%',

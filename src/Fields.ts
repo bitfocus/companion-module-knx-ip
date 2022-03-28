@@ -30,18 +30,12 @@ function makeSubtypeSelectField(dpt: DPT): SomeCompanionInputField {
 		type: 'dropdown',
 		label: dpt.id + ': Sub-Type',
 		id: 'data_subtype_' + dpt.id,
-		default: '',
+		default: dpt.subtypes[0].id,
 		isVisible: constructVisibilityFunction(dpt.id),
-		choices: [
-			{
-				id: '',
-				label: '[None]',
-			},
-			...dpt.subtypes.map(subtype => ({
-				id: subtype.id,
-				label: subtype.id + ': ' + subtype.label,
-			}))
-		]
+		choices: dpt.subtypes.map(subtype => ({
+			id: subtype.id,
+			label: subtype.id + ': ' + subtype.label,
+		}))
 	}
 }
 
@@ -114,10 +108,7 @@ function makeValueField(dpt: DPT, subtype?: Subtype): SomeCompanionInputField {
 }
 
 const DPT_VALUE_FIELDS: SomeCompanionInputField[] =
-	DPTs.flatMap(dpt => [
-		makeValueField(dpt),
-		...dpt.subtypes?.map(subtype => makeValueField(dpt, subtype)) // || []
-	])
+	DPTs.flatMap(dpt => dpt.subtypes?.map(subtype => makeValueField(dpt, subtype)))
 
 const DPT_COMPARISON_FIELDS: SomeCompanionInputField[] = [];
 
