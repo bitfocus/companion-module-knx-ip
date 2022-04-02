@@ -3,21 +3,8 @@ import {DPT2} from './DPT2'
 import {DPT3} from './DPT3'
 import {DPT4} from './DPT4'
 import {DPT5} from './DPT5'
-
-/**
- * DPT <> Fields
- *
- * Field:
- *  id
- *  label
- *  specializaton (boolean, booleanLabels, …)
- *
- * DPT:
- *  valueFn
- *  subtypes
- *  ! specialization also (Type-Specific Subtypes)
- */
-
+import {DPT6} from './DPT6'
+import {DPT7} from './DPT7'
 
 export type FieldValues = { [key: string]: any }
 export type ValueFunction = (value: any, extraFields: FieldValues, dpt: DPT, subtype: Subtype) => any;
@@ -104,4 +91,6 @@ export const DPTs: DPT[] = [
 	DPT3,
 	DPT4,
 	DPT5,
+	DPT6,
+	DPT7,
 ]

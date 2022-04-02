@@ -7,10 +7,9 @@ export const DPT3: NumberDPT = {
 	id: 'DPT3',
 	label: '4-bit Dimming/Blinds control',
 	numberRange: [0, 7],
-	projectedRange: [0, 100],
-	unit: '%',
-	valueFn: (value, extraFields) => ({
-		data: value,
+	unit: '0-7 = 0-100%',
+	valueFn: (value: number, extraFields) => ({
+		value: Math.round(value),
 		decr_incr: extraFields['decr_incr'] === '1'
 	}),
 	extraFields: [{

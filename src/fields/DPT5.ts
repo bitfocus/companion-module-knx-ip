@@ -1,15 +1,14 @@
 import {NumberDPT, NumberSubtype} from './DPT'
-import {scale} from './ScaleFunction'
+import {scaleDpt} from './ScaleFunction'
 
 // https://www.knx.org/wAssets/docs/downloads/Certification/Interworking-Datapoint-types/03_07_02-Datapoint-Types-v02.02.01-AS.pdf
 // Chapter 3.5
 export const DPT5: NumberDPT = {
 	type: 'number',
 	id: 'DPT5',
-	label: '8-bit Unsigned',
+	label: '8-bit unsigned',
 	numberRange: [0, 255],
-	valueFn: (value: number, _extraFields, dpt: NumberDPT, subtype: NumberSubtype) =>
-		Math.round(scale(value, dpt.numberRange, subtype.projectedRange || dpt.projectedRange)),
+	valueFn: (value: number, _extraFields, dpt: NumberDPT, subtype: NumberSubtype) => scaleDpt(value, dpt, subtype),
 	subtypes: [
 		{
 			id: '001',

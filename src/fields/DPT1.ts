@@ -97,6 +97,14 @@ export const DPT1: BooleanDPT = {
 			id: '022',
 			label: 'Scene A/B',
 			booleanLabels: ['Scene A', 'Scene B'],
+		}, {
+			id: '023',
+			label: 'Shutter/Blinds Mode',
+			booleanLabels: ['Only move Up/Down mode (Shutter)', 'Move Up/Down + StepStop mode (Blind)'],
+		}, {
+			id: '024',
+			label: 'Day/Night',
+			booleanLabels: ['Day', 'Night'],
 		}
 	]
 }
