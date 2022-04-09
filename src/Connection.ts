@@ -4,12 +4,10 @@ import knx = require('knx')
 import EventEmitter = require('events')
 
 export class Connection extends EventEmitter {
-	private readonly log: LogFunction
 	private connection?: knx.Connection
 
-	constructor(log: LogFunction) {
+	constructor(private readonly log: LogFunction) {
 		super()
-		this.log = log
 	}
 
 	async connect(ipAddr: string): Promise<void> {

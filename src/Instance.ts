@@ -2,11 +2,13 @@ import InstanceSkel = require('../../../instance_skel')
 import {CompanionInputField} from '../../../instance_skel_types'
 import {Config, CONFIG_FIELDS} from './Config'
 import {Connection} from './Connection'
-import {ACTIONS} from './Actions'
-import {FEEDBACKS} from './Feedbacks'
+import {FeedbackHandler} from './FeedbackHandler'
+import {ActionHandler} from './ActionHandler'
 
 export class Instance extends InstanceSkel<Config> {
 	private connection?: Connection
+	private actionHandler: ActionHandler
+	private feedbackHandler: FeedbackHandler
 
 	init(): void {
 		this.log('debug', '▶️ init')
@@ -16,14 +18,19 @@ export class Instance extends InstanceSkel<Config> {
 		this.connection.on('disconnected', () => this.status(this.STATUS_UNKNOWN, 'Disconnected'))
 
 		this.updateConfig(this.config)
-		this.setActions(ACTIONS)
-		this.setFeedbackDefinitions(FEEDBACKS)
+
+		this.actionHandler = new ActionHandler(this.log)
+		this.setActions(this.actionHandler.getActionDefinitions())
+
+		this.feedbackHandler = new FeedbackHandler(this.log)
+		this.setFeedbackDefinitions(this.feedbackHandler.getFeedbackDefinitions())
 	}
 
 	destroy(): void {
 		this.log('debug', '⏯ destroying')
 		if (this.connection) {
 			this.connection.disconnect()
+				.then(() => this.log('debug', '⏹ destroyed'))
 		}
 	}
 
