@@ -8,12 +8,7 @@ export const DPT4: TextDPT = {
 	label: 'Character',
 	valueFn: (value) => value,
 	subtypes: [
-		{
-			id: '001',
-			label: 'ASCII',
-		}, {
-			id: '008',
-			label: 'ISO-8859-1',
-		}
+		{id: '001', label: 'ASCII'},
+		{id: '008', label: 'ISO-8859-1'},
 	]
 }

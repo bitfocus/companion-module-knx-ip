@@ -9,50 +9,16 @@ export const DPT7: NumberDPT = {
 	numberRange: [0, 65_535],
 	valueFn: (value: number) => Math.round(value),
 	subtypes: [
-		{
-			id: '001',
-			label: 'Pulses',
-			unit: 'pulses'
-		}, {
-			id: '002',
-			label: 'Period (1ms)',
-			unit: 'milliseconds'
-		}, {
-			id: '003',
-			label: 'Period (10ms)',
-			unit: 'centiseconds'
-		}, {
-			id: '004',
-			label: 'Period (100ms)',
-			unit: 'deciseconds'
-		}, {
-			id: '005',
-			label: 'Period (s)',
-			unit: 'seconds'
-		}, {
-			id: '006',
-			label: 'Period (min)',
-			unit: 'minutes'
-		}, {
-			id: '007',
-			label: 'Period (hours)',
-			unit: 'hours'
-		}, {
-			id: '011',
-			label: 'Length (mm)',
-			unit: 'millimeters'
-		}, {
-			id: '012',
-			label: 'Bus Power Supply current',
-			unit: 'mA'
-		}, {
-			id: '013',
-			label: 'Brightness',
-			unit: 'lux'
-		}, {
-			id: '600',
-			label: 'Absolute colour temperature',
-			unit: 'K'
-		}
+		{id: '600', label: 'Absolute colour temperature', unit: 'K'},
+		{id: '001', label: 'Counter Pulses', unit: 'pulses'},
+		{id: '002', label: 'Period (ms)', unit: 'milliseconds'},
+		{id: '003', label: 'Period (10ms)', unit: 'centiseconds'},
+		{id: '004', label: 'Period (100ms)', unit: 'deciseconds'},
+		{id: '005', label: 'Period (s)', unit: 'seconds'},
+		{id: '006', label: 'Period (min)', unit: 'minutes'},
+		{id: '007', label: 'Period (hrs)', unit: 'hours'},
+		{id: '011', label: 'Length in mm', unit: 'mm'},
+		{id: '012', label: 'Bus Power Supply current (mA)', unit: 'mA'},
+		{id: '013', label: 'Interior Brightness', unit: 'lux'},
 	]
 }

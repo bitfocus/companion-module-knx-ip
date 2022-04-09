@@ -19,12 +19,7 @@ export const DPT3: NumberDPT = {
 		booleanLabels: ['Decrease', 'Increase'],
 	}],
 	subtypes: [
-		{
-			id: '007',
-			label: 'Dimming Control',
-		}, {
-			id: '008',
-			label: 'Blinds Control',
-		}
+		{id: '007', label: 'Dimming Control'},
+		{id: '008', label: 'Blinds Control'},
 	]
 }
