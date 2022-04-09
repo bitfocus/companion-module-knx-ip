@@ -16,7 +16,8 @@
 		"build": "npx rimraf dist && npx -p typescript@~4.5 tsc -p tsconfig.build.json",
 		"build:main": "tsc -p tsconfig.build.json",
 		"build:watch": "tsc -p tsconfig.build.json --watch",
-		"postinstall": "yarn build"
+		"postinstall": "yarn build",
+		"test": "jest"
 	},
 	"manufacturer": "KNX Association",
 	"product": "KNX-IP",
@@ -26,8 +27,11 @@
 		"knx": "^2.5.1"
 	},
 	"devDependencies": {
-		"@types/node": "^12.20.19",
 		"@types/async-exit-hook": "^2.0.0",
+		"@types/jest": "^27.4.1",
+		"@types/node": "^12.20.19",
+		"jest": "^27.5.1",
+		"ts-jest": "^27.1.4",
 		"ts-node": "^9.1.1",
 		"typescript": "~4.5"
 	}
