@@ -36,6 +36,13 @@ class ConnectionTeardownManager {
 			connection.Disconnect(() => resolve(undefined))
 		})
 	}
+
+	unregisterConnection(connection: knx.Connection) {
+		const index = this.activeConnections.indexOf(connection)
+		if (index !== -1) {
+			this.activeConnections.splice(index, 1);
+		}
+	}
 }
 
 export const ConnectionTeardown = new ConnectionTeardownManager()

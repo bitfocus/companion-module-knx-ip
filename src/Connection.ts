@@ -60,6 +60,7 @@ export class Connection extends EventEmitter {
 		this.log('info', '🟥 disconnected')
 		this.emit('disconnected')
 
+		ConnectionTeardown.unregisterConnection(this.connection)
 		this.connection = undefined
 	}
 }
