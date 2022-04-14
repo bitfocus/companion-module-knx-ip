@@ -5,7 +5,7 @@ import {NumberDPT} from './DPT'
 export const DPT6: NumberDPT = {
 	type: 'number',
 	id: 'DPT6',
-	label: '8-bit signed relative',
+	label: '8-bit signed',
 	numberRange: [-128, 127],
 	valueFn: (value: number) => Math.round(value),
 	subtypes: [

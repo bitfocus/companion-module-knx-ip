@@ -1,4 +1,5 @@
-import {NumberDPT} from './DPT'
+import {NumberDPT, NumberSubtype} from './DPT'
+import {scaleDpt} from './ScaleFunction'
 
 // https://www.knx.org/wAssets/docs/downloads/Certification/Interworking-Datapoint-types/03_07_02-Datapoint-Types-v02.02.01-AS.pdf
 // Chapter 3.9
@@ -7,7 +8,7 @@ export const DPT8: NumberDPT = {
 	id: 'DPT8',
 	label: '16-bit signed',
 	numberRange: [-32_768, 32_767],
-	valueFn: (value: number) => Math.round(value),
+	valueFn: (value: number, _extraFields, dpt: NumberDPT, subtype: NumberSubtype) => scaleDpt(value, dpt, subtype),
 	subtypes: [
 		{id: '001', label: 'Counter Pulses', unit: 'pulses'},
 		{id: '002', label: 'Period (ms)', unit: 'milliseconds'},
