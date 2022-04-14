@@ -3,8 +3,11 @@ import {ConnectionTeardown} from './ConnectionTeardown'
 import knx = require('knx')
 import EventEmitter = require('events')
 
+export type DptMap = { [key: string]: knx.Datapoint }
+
 export class Connection extends EventEmitter {
 	private connection?: knx.Connection
+	private dpts: DptMap = {}
 
 	constructor(private readonly log: LogFunction) {
 		super()
@@ -38,6 +41,14 @@ export class Connection extends EventEmitter {
 		} else {
 			return Promise.resolve()
 		}
+	}
+
+	getOrCreateDpt(ga: string, dpt: string): knx.Datapoint {
+		if (!(ga in this.dpts)) {
+			this.dpts[ga] = new knx.Datapoint({ga, dpt}, this.connection)
+		}
+
+		return this.dpts[ga]
 	}
 
 	private onConnected(): void {

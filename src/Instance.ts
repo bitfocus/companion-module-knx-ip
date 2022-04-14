@@ -19,7 +19,7 @@ export class Instance extends InstanceSkel<Config> {
 
 		this.updateConfig(this.config)
 
-		this.actionHandler = new ActionHandler(this.log)
+		this.actionHandler = new ActionHandler(this.log, this.connection)
 		this.setActions(this.actionHandler.getActionDefinitions())
 
 		this.feedbackHandler = new FeedbackHandler(this.log)

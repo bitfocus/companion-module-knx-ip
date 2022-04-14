@@ -2,9 +2,10 @@ import {CompanionActionEvent, CompanionActions} from '../../../instance_skel_typ
 import {DPT_ACTION_FIELDS, GROUP_ADDR_FIELD} from './Fields'
 import {DPTs} from './fields/DPT'
 import {LogFunction} from './LogFunction'
+import {Connection} from './Connection'
 
 export class ActionHandler {
-	constructor(private readonly log: LogFunction) {
+	constructor(private readonly log: LogFunction, private connection: Connection) {
 	}
 
 	getActionDefinitions(): CompanionActions {
@@ -21,9 +22,9 @@ export class ActionHandler {
 	}
 
 	handle(action: CompanionActionEvent): void {
-		const group_addr = action.options['group_addr']
-		const data_type = action.options['data_type']
-		const data_subtype = action.options['data_subtype_' + data_type]
+		const group_addr = action.options['group_addr'] as string
+		const data_type = action.options['data_type'] as string
+		const data_subtype = action.options['data_subtype_' + data_type] as string
 		const raw_value = action.options['value_' + data_type + '_' + data_subtype]
 		const extra_fields = Object.keys(action.options)
 			.reduce((filtered, key) => {
@@ -46,5 +47,7 @@ export class ActionHandler {
 			'extra_fields': extra_fields,
 			'converted_value': converted_value
 		}, null, 2))
+
+		this.connection.getOrCreateDpt(group_addr, data_type).write(converted_value)
 	}
 }
