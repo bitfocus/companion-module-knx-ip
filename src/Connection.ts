@@ -8,9 +8,14 @@ export type DptMap = { [key: string]: knx.Datapoint }
 export class Connection extends EventEmitter {
 	private connection?: knx.Connection
 	private dpts: DptMap = {}
+	private connected = false;
 
 	constructor(private readonly log: LogFunction) {
 		super()
+	}
+
+	get isConnected(): boolean {
+		return this.connected;
 	}
 
 	async connect(ipAddr: string): Promise<void> {
@@ -30,6 +35,7 @@ export class Connection extends EventEmitter {
 		if (this.connection) {
 			this.log('info', '🟧 disconnecting')
 			this.emit('disconnecting')
+			this.connected = false
 
 			return new Promise<void>(resolve => {
 				this.connection!.off()
@@ -53,6 +59,7 @@ export class Connection extends EventEmitter {
 
 	private onConnected(): void {
 		this.log('info', '🟩 connected')
+		this.connected = true
 		this.emit('connected')
 	}
 

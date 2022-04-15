@@ -6,6 +6,11 @@ import {DPT5} from './DPT5'
 import {DPT6} from './DPT6'
 import {DPT7} from './DPT7'
 import {DPT8} from './DPT8'
+import {DPT9} from './DPT9'
+import {DPT10} from './DPT10'
+import {DPT11} from './DPT11'
+import {DPT12} from './DPT12'
+import {DPT13} from './DPT13'
 
 export type FieldValues = { [key: string]: any }
 export type ValueFunction = (value: any, extraFields: FieldValues, dpt: DPT, subtype: Subtype) => any;
@@ -33,7 +38,12 @@ export interface TextField extends FieldBase {
 	type: 'text'
 }
 
-export type Field = BooleanField | NumberField | TextField;
+export interface SelectField extends FieldBase {
+	type: 'select'
+	choices: { id: string, label: string }[]
+}
+
+export type Field = BooleanField | NumberField | TextField | SelectField;
 
 // DPTs
 interface DPTBase {
@@ -83,9 +93,19 @@ export interface TextDPT extends DPTBase {
 export interface TextSubtype extends SubtypeBase {
 }
 
+export interface SelectDPT extends DPTBase {
+	type: 'select'
+	subtypes?: SelectSubtype[]
+	choices: { id: string, label: string }[]
+}
+
+export interface SelectSubtype extends SubtypeBase {
+	choices: { id: string, label: string }[]
+}
+
 // Aggregate
-export type DPT = BooleanDPT | NumberDPT | TextDPT;
-export type Subtype = BooleanSubtype | NumberSubtype | TextSubtype;
+export type DPT = BooleanDPT | NumberDPT | TextDPT | SelectDPT;
+export type Subtype = BooleanSubtype | NumberSubtype | TextSubtype | SelectSubtype;
 export const DPTs: DPT[] = [
 	DPT1,
 	DPT2,
@@ -95,4 +115,9 @@ export const DPTs: DPT[] = [
 	DPT6,
 	DPT7,
 	DPT8,
+	DPT9,
+	DPT10,
+	DPT11,
+	DPT12,
+	DPT13,
 ]

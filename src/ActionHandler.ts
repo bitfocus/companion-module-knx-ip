@@ -48,6 +48,8 @@ export class ActionHandler {
 			'converted_value': converted_value
 		}, null, 2))
 
-		this.connection.getOrCreateDpt(group_addr, data_type).write(converted_value)
+		if (this.connection.isConnected) {
+			this.connection.getOrCreateDpt(group_addr, data_type).write(converted_value)
+		}
 	}
 }

@@ -1,5 +1,5 @@
 import {SomeCompanionInputField} from '../../../instance_skel_types'
-import {BooleanDPT, BooleanField, BooleanSubtype, DPT, DPTs, Field, NumberDPT, NumberField, NumberSubtype, Subtype, TextDPT, TextField, TextSubtype} from './fields/DPT'
+import {BooleanDPT, BooleanField, BooleanSubtype, DPT, DPTs, Field, NumberDPT, NumberField, NumberSubtype, SelectDPT, SelectField, SelectSubtype, Subtype, TextDPT, TextField, TextSubtype} from './fields/DPT'
 
 const DPT_SELECT_FIELD: SomeCompanionInputField = {
 	type: 'dropdown',
@@ -93,6 +93,18 @@ function makeTextValueField(dpt: TextDPT, subtype?: TextSubtype): SomeCompanionI
 	}
 }
 
+function makeSelectValueField(dpt: SelectDPT, subtype?: SelectSubtype): SomeCompanionInputField {
+	const choices = subtype?.choices || dpt.choices;
+	return {
+		type: 'dropdown',
+		label: constructLabel(dpt, subtype) + ' Value',
+		id: 'value_' + dpt.id + '_' + subtype.id,
+		default: choices.length > 0 ? choices[0].id : '',
+		isVisible: constructVisibilityFunction(dpt.id, subtype?.id || ''),
+		choices,
+	}
+}
+
 function makeValueFields(dpt: DPT): SomeCompanionInputField[] {
 	switch (dpt.type) {
 		case 'boolean':
@@ -101,13 +113,15 @@ function makeValueFields(dpt: DPT): SomeCompanionInputField[] {
 			return dpt.subtypes?.map(subtype => makeNumberValueField(dpt, subtype))
 		case 'text':
 			return dpt.subtypes?.map(subtype => makeTextValueField(dpt, subtype))
+		case 'select':
+			return dpt.subtypes?.map(subtype => makeSelectValueField(dpt, subtype))
 	}
 }
 
 const DPT_VALUE_FIELDS: SomeCompanionInputField[] =
 	DPTs.flatMap(dpt => makeValueFields(dpt))
 
-const DPT_COMPARISON_FIELDS: SomeCompanionInputField[] = [];
+const DPT_FEEDBACK_MATCH_FIELDS: SomeCompanionInputField[] = [];
 
 function makeBooleanExtraField(dpt: DPT, field: BooleanField): SomeCompanionInputField {
 	return {
@@ -155,6 +169,18 @@ function makeTextExtraField(dpt: DPT, field: TextField): SomeCompanionInputField
 	}
 }
 
+function makeSelectExtraField(dpt: DPT, field: SelectField): SomeCompanionInputField {
+	const choices = field.choices;
+	return {
+		type: 'dropdown',
+		label: field.label,
+		id: 'extra_' + dpt.id + '_' + field.id,
+		default: choices.length > 0 ? choices[0].id : '',
+		isVisible: constructVisibilityFunction(dpt.id),
+		choices,
+	}
+}
+
 function makeExtraFields(dpt: DPT): SomeCompanionInputField[] {
 	return dpt.extraFields?.map(field => makeExtraField(dpt, field)) || [];
 }
@@ -167,6 +193,8 @@ function makeExtraField(dpt: DPT, field: Field): SomeCompanionInputField {
 			return makeNumberExtraField(dpt, field)
 		case 'text':
 			return makeTextExtraField(dpt, field)
+		case 'select':
+			return makeSelectExtraField(dpt, field)
 	}
 }
 
@@ -183,7 +211,7 @@ export const DPT_ACTION_FIELDS = [
 export const DPT_FEEDBACK_FIELDS = [
 	DPT_SELECT_FIELD,
 	...DPT_SUBTYPE_FIELDS,
-	...DPT_COMPARISON_FIELDS,
+	...DPT_FEEDBACK_MATCH_FIELDS,
 	...DPT_EXTRA_FIELDS,
 ]
 
