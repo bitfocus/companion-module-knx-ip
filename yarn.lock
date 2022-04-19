@@ -1894,10 +1894,9 @@ kleur@^3.0.3:
   resolved "https://registry.yarnpkg.com/kleur/-/kleur-3.0.3.tgz#a79c9ecc86ee1ce3fa6206d1216c501f147fc07e"
   integrity sha512-eTIzlVOSUR+JxdDFepEYcBMtZ9Qqdef+rnzWdRZuMbOywu5tO2w2N7rqjoANZ5k9vywhL6Br1VRjUIgTQx4E8w==
 
-knx@^2.5.1:
-  version "2.5.1"
-  resolved "https://registry.yarnpkg.com/knx/-/knx-2.5.1.tgz#95045e98f860afdd9439fdde5e7cb2b842d4abda"
-  integrity sha512-Liv+FiNNtsOchZCM/OI2o4BKfKzle/rHLi+xVxwHvTzfa/3dnLqyWJezw3pEhTH4q9LebAKl5MUu04CIrS7HPA==
+"knx@git+https://bitbucket.org/pkoerner/knx.js.git":
+  version "2.5.2"
+  resolved "git+https://bitbucket.org/pkoerner/knx.js.git#a9015f5b8ac962428a51a2716387f1dd60159afa"
   dependencies:
     "@types/node" "^6.14.4"
     binary-parser "1.1.5"
