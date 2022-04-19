@@ -11,6 +11,10 @@ import {DPT10} from './DPT10'
 import {DPT11} from './DPT11'
 import {DPT12} from './DPT12'
 import {DPT13} from './DPT13'
+import {DPT14} from './DPT14'
+import {DPT16} from './DPT16'
+import {DPT17} from './DPT17'
+import {DPT18} from './DPT18'
 
 export type FieldValues = { [key: string]: any }
 export type ValueFunction = (value: any, extraFields: FieldValues, dpt: DPT, subtype: Subtype) => any;
@@ -49,6 +53,7 @@ export type Field = BooleanField | NumberField | TextField | SelectField;
 interface DPTBase {
 	id: string;
 	label: string;
+	valueLabel?: string;
 	valueFn: ValueFunction
 	subtypes?: SubtypeBase[]
 	extraFields?: Field[]
@@ -71,7 +76,7 @@ export interface BooleanSubtype extends SubtypeBase {
 
 export interface NumberDPT extends DPTBase {
 	type: 'number'
-	numberRange: [number, number]
+	numberRange?: [number, number]
 	projectedRange?: [number, number]
 	step?: number
 	unit?: string
@@ -120,4 +125,8 @@ export const DPTs: DPT[] = [
 	DPT11,
 	DPT12,
 	DPT13,
+	DPT14,
+	DPT16,
+	DPT17,
+	DPT18,
 ]

@@ -1,5 +1,5 @@
 At first glance this looks like it could come from DPT-Lib of knx.js (https://bitbucket.org/ekarak/knx.js/src/master/src/dptlib/)
-and this is certainly true for the boolean DPTs, but for all other DPTs knx.js dptlib misses
+and this is certainly true for the boolean DPTs, but for most other DPTs knx.js dptlib misses
 a bunch of information in a machine readable format:
  - actual ranges of the number subtypes
  - select-options and structure for composite types (DPT2, DPT3, ...)

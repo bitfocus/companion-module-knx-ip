@@ -6,7 +6,6 @@ export const DPT9: NumberDPT = {
 	type: 'number',
 	id: 'DPT9',
 	label: '16-bit float',
-	numberRange: [-65_504, 65_504],
 	step: 0.01,
 	valueFn: value => value,
 	subtypes: [

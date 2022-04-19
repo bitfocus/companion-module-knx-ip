@@ -43,13 +43,19 @@ const DPT_SUBTYPE_FIELDS: SomeCompanionInputField[] =
 	DPTs.map(dpt => makeSubtypeSelectField(dpt))
 
 function constructLabel(dpt: DPT, subtype?: Subtype) {
-	return subtype ? subtype.label : dpt.label
+	if (subtype) {
+		return subtype.label + ' Value'
+	} else if (dpt.valueLabel) {
+		return dpt.valueLabel
+	} else {
+		return dpt.label + ' Value'
+	}
 }
 
 function makeBooleanValueField(dpt: BooleanDPT, subtype?: BooleanSubtype): SomeCompanionInputField {
 	return {
 		type: 'dropdown',
-		label: constructLabel(dpt, subtype) + ' Value',
+		label: constructLabel(dpt, subtype),
 		id: 'value_' + dpt.id + '_' + subtype.id,
 		default: '0',
 		isVisible: constructVisibilityFunction(dpt.id, subtype?.id || ''),
@@ -68,16 +74,18 @@ function makeBooleanValueField(dpt: BooleanDPT, subtype?: BooleanSubtype): SomeC
 
 function makeNumberValueField(dpt: NumberDPT, subtype?: NumberSubtype): SomeCompanionInputField {
 	const unit = subtype?.unit || dpt.unit;
+	const range = subtype?.projectedRange || subtype?.numberRange || dpt.projectedRange || dpt.numberRange
+
 	return {
 		type: 'number',
-		label: unit ? `${constructLabel(dpt, subtype)} Value (${unit})` : constructLabel(dpt, subtype) + ' Value',
+		label: unit ? `${constructLabel(dpt, subtype)} (${unit})` : constructLabel(dpt, subtype),
 		id: 'value_' + dpt.id + '_' + subtype.id,
 		default: 0,
-		range: true,
+		range: range != undefined,
 		required: true,
 		isVisible: constructVisibilityFunction(dpt.id, subtype?.id || ''),
-		min: subtype?.projectedRange?.[0] || subtype?.numberRange?.[0] || dpt.projectedRange?.[0] || dpt.numberRange[0],
-		max: subtype?.projectedRange?.[1] || subtype?.numberRange?.[1] || dpt.projectedRange?.[1] || dpt.numberRange[1],
+		min: range?.[0],
+		max: range?.[1],
 		step: subtype?.step || dpt.step || 1,
 	}
 }
@@ -85,7 +93,7 @@ function makeNumberValueField(dpt: NumberDPT, subtype?: NumberSubtype): SomeComp
 function makeTextValueField(dpt: TextDPT, subtype?: TextSubtype): SomeCompanionInputField {
 	return {
 		type: 'textinput',
-		label: constructLabel(dpt, subtype) + ' Value',
+		label: constructLabel(dpt, subtype),
 		id: 'value_' + dpt.id + '_' + subtype.id,
 		default: '',
 		required: true,
@@ -97,7 +105,7 @@ function makeSelectValueField(dpt: SelectDPT, subtype?: SelectSubtype): SomeComp
 	const choices = subtype?.choices || dpt.choices;
 	return {
 		type: 'dropdown',
-		label: constructLabel(dpt, subtype) + ' Value',
+		label: constructLabel(dpt, subtype),
 		id: 'value_' + dpt.id + '_' + subtype.id,
 		default: choices.length > 0 ? choices[0].id : '',
 		isVisible: constructVisibilityFunction(dpt.id, subtype?.id || ''),
