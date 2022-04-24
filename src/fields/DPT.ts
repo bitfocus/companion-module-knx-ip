@@ -15,6 +15,8 @@ import {DPT14} from './DPT14'
 import {DPT16} from './DPT16'
 import {DPT17} from './DPT17'
 import {DPT18} from './DPT18'
+import {DPT19} from './DPT19'
+import {DPT232} from './DPT232'
 
 export type FieldValues = { [key: string]: any }
 export type ValueFunction = (value: any, extraFields: FieldValues, dpt: DPT, subtype: Subtype) => any;
@@ -129,4 +131,6 @@ export const DPTs: DPT[] = [
 	DPT16,
 	DPT17,
 	DPT18,
+	DPT19,
+	DPT232,
 ]
