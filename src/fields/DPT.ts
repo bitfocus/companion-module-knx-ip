@@ -19,7 +19,8 @@ import {DPT19} from './DPT19'
 import {DPT232} from './DPT232'
 
 export type FieldValues = { [key: string]: any }
-export type ValueFunction = (value: any, extraFields: FieldValues, dpt: DPT, subtype: Subtype) => any;
+export type ValueFunction = (value: any, extraFields: FieldValues, dpt: DPT, subtype: Subtype) => any
+export type FeedbackFunction = (value: any, feedback_fields: FieldValues, extra_fields: FieldValues, dpt: DPT, subtype: Subtype) => boolean
 
 // Field Specs
 interface FieldBase {
@@ -56,7 +57,10 @@ interface DPTBase {
 	id: string;
 	label: string;
 	valueLabel?: string;
+
 	valueFn: ValueFunction
+	feedbackFn: FeedbackFunction
+
 	subtypes?: SubtypeBase[]
 	extraFields?: Field[]
 }
@@ -134,3 +138,11 @@ export const DPTs: DPT[] = [
 	DPT19,
 	DPT232,
 ]
+
+export function getDpt(type_id: string): DPT {
+	return DPTs.filter(dpt => dpt.id === type_id)[0]
+}
+
+export function getDptSubtype(dpt: DPT, subtype_id: string): SubtypeBase {
+	return dpt.subtypes.filter(subtype => subtype.id === subtype_id)[0]
+}

@@ -14,15 +14,19 @@ export class Instance extends InstanceSkel<Config> {
 		this.log('debug', '▶️ init')
 		this.connection = new Connection(this.log)
 		this.connection.on('connecting', () => this.status(this.STATUS_WARNING, 'Connecting'))
-		this.connection.on('connected', () => this.status(this.STATUS_OK, 'Connected'))
+		this.connection.on('connected', () => {
+			this.status(this.STATUS_OK, 'Connected')
+			this.feedbackHandler.updateWatches()
+		})
 		this.connection.on('disconnected', () => this.status(this.STATUS_UNKNOWN, 'Disconnected'))
+		this.connection.on('valueChanged', () => this.checkFeedbacks('recv'))
 
 		this.updateConfig(this.config)
 
 		this.actionHandler = new ActionHandler(this.log, this.connection)
 		this.setActions(this.actionHandler.getActionDefinitions())
 
-		this.feedbackHandler = new FeedbackHandler(this.log)
+		this.feedbackHandler = new FeedbackHandler(this.log, this.connection, () => this.getAllFeedbacks())
 		this.setFeedbackDefinitions(this.feedbackHandler.getFeedbackDefinitions())
 	}
 

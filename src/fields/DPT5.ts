@@ -9,6 +9,9 @@ export const DPT5: NumberDPT = {
 	label: '8-bit unsigned',
 	numberRange: [0, 255],
 	valueFn: (value: number, _extraFields, dpt: NumberDPT, subtype: NumberSubtype) => scaleDpt(value, dpt, subtype),
+	feedbackFn: (value: number, feedback_fields, _, dpt: NumberDPT, subtype: NumberSubtype) =>
+		scaleDpt(value, dpt, subtype) <= feedback_fields['min'] &&
+		scaleDpt(value, dpt, subtype) >= feedback_fields['max'],
 	subtypes: [
 		{id: '001', label: 'Scaling', projectedRange: [0, 100], unit: '%'},
 		{id: '002', label: 'Angle', projectedRange: [0, 360], unit: '°'},

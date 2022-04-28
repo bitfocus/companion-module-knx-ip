@@ -12,6 +12,8 @@ export const DPT2: BooleanDPT = {
 		data: value === '1',
 		priority: extraFields['priority'] === '1'
 	}),
+	feedbackFn: (value: { data: boolean, priority: boolean }, feedback_fields) =>
+		value.data == (feedback_fields['equals'] === '1'),
 	subtypes: DPT1.subtypes.filter(subtype => ['001', '002', '003', '004', '005', '006', '007', '008', '009', '010', '011', '012'].includes(subtype.id)),
 	extraFields: [{
 		id: 'priority',

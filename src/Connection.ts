@@ -1,14 +1,17 @@
 import {LogFunction} from './LogFunction'
 import {ConnectionTeardown} from './ConnectionTeardown'
+import {KnxValue} from 'knx'
 import knx = require('knx')
 import EventEmitter = require('events')
 
 export type DptMap = { [key: string]: knx.Datapoint }
+export type DptValueMap = { [key: string]: knx.KnxValue }
 
 export class Connection extends EventEmitter {
 	private connection?: knx.Connection
 	private dpts: DptMap = {}
-	private connected = false;
+	private connected = false
+	private dptValues: DptValueMap = {}
 
 	constructor(private readonly log: LogFunction) {
 		super()
@@ -51,10 +54,25 @@ export class Connection extends EventEmitter {
 
 	getOrCreateDpt(ga: string, dpt: string): knx.Datapoint {
 		if (!(ga in this.dpts)) {
-			this.dpts[ga] = new knx.Datapoint({ga, dpt}, this.connection)
+			const dp = this.dpts[ga] = new knx.Datapoint({ga, dpt}, this.connection)
+			this.log('info', 'read dpt ' + ga)
+			dp.read((_src, value) => {
+				this.log('info', 'read dpt ' + ga + ' ➡ ' + value)
+				this.dptValues[ga] = value
+				this.onChanged()
+			})
+			dp.on('change', (_oldValue, newValue) => {
+				this.log('info', 'onChange dpt ' + ga + ' ➡ ' + newValue)
+				this.dptValues[ga] = newValue
+				this.onChanged()
+			})
 		}
 
 		return this.dpts[ga]
+	}
+
+	getLastValue(ga: string): KnxValue | undefined {
+		return this.dptValues[ga]
 	}
 
 	private onConnected(): void {
@@ -69,5 +87,10 @@ export class Connection extends EventEmitter {
 
 		ConnectionTeardown.unregisterConnection(this.connection)
 		this.connection = undefined
+	}
+
+	private onChanged(): void {
+		this.log('info', 'ℹ️ value changed')
+		this.emit('valueChanged')
 	}
 }

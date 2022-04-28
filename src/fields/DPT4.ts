@@ -7,6 +7,8 @@ export const DPT4: TextDPT = {
 	id: 'DPT4',
 	label: 'Character',
 	valueFn: (value) => value,
+	feedbackFn: (value: string, feedback_fields) =>
+		value == feedback_fields['equals'],
 	subtypes: [
 		{id: '001', label: 'ASCII'},
 		{id: '008', label: 'ISO-8859-1'},

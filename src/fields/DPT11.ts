@@ -7,6 +7,8 @@ export const DPT11: TextDPT = {
 	id: 'DPT11',
 	label: 'Date',
 	valueFn: value => value,
+	feedbackFn: (value: string, feedback_fields) =>
+		value == feedback_fields['equals'],
 	subtypes: [
 		{id: '001', label: 'Date (YYYY/MM/DD)'},
 	]

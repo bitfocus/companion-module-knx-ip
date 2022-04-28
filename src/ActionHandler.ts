@@ -1,6 +1,6 @@
 import {CompanionActionEvent, CompanionActions} from '../../../instance_skel_types'
 import {DPT_ACTION_FIELDS, GROUP_ADDR_FIELD} from './Fields'
-import {DPTs} from './fields/DPT'
+import {getDpt, getDptSubtype} from './fields/DPT'
 import {LogFunction} from './LogFunction'
 import {Connection} from './Connection'
 
@@ -36,8 +36,8 @@ export class ActionHandler {
 				return filtered
 			}, {} as { [key: string]: any })
 
-		const dpt = DPTs.filter(dpt => dpt.id === data_type)[0]
-		const subtype = dpt.subtypes.filter(subtype => subtype.id === data_subtype)[0]
+		const dpt = getDpt(data_type)
+		const subtype = getDptSubtype(dpt, data_subtype)
 		const converted_value = dpt.valueFn(raw_value, extra_fields, dpt, subtype)
 
 		this.log('info', '➡️ sending ' + JSON.stringify({

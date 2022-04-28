@@ -8,6 +8,9 @@ export const DPT13: NumberDPT = {
 	label: '32-bit signed',
 	numberRange: [-2_147_483_648, 2_147_483_647],
 	valueFn: value => value,
+	feedbackFn: (value: number, feedback_fields) =>
+		value <= feedback_fields['min'] &&
+		value >= feedback_fields['max'],
 	subtypes: [
 		{id: '001', label: 'Counter Pulses', unit: 'pulses'},
 		{id: '002', label: 'Flow Rate', unit: 'm³/h'},

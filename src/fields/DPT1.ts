@@ -8,6 +8,8 @@ export const DPT1: BooleanDPT = {
 	type: 'boolean',
 	booleanLabels: ['False', 'True'],
 	valueFn: (value) => value === '1',
+	feedbackFn: (value: boolean, feedback_fields) =>
+		value === (feedback_fields['equals'] === '1'),
 	subtypes: [
 		{id: '001', label: 'Switch', booleanLabels: ['Off', 'On']},
 		{id: '002', label: 'Boolean', booleanLabels: ['False', 'True']},

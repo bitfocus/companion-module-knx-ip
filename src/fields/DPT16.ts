@@ -7,6 +7,8 @@ export const DPT16: TextDPT = {
 	id: 'DPT16',
 	label: 'Text (Up to 14 Characters)',
 	valueFn: (value) => value,
+	feedbackFn: (value: string, feedback_fields) =>
+		value == feedback_fields['equals'],
 	subtypes: [
 		{id: '001', label: 'ASCII'},
 		{id: '008', label: 'ISO-8859-1'},

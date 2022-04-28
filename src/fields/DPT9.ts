@@ -8,6 +8,9 @@ export const DPT9: NumberDPT = {
 	label: '16-bit float',
 	step: 0.01,
 	valueFn: value => value,
+	feedbackFn: (value: number, feedback_fields) =>
+		value <= feedback_fields['min'] &&
+		value >= feedback_fields['max'],
 	subtypes: [
 		{id: '001', label: 'Temperature', unit: '°C', numberRange: [-273, 670760]},
 		{id: '002', label: 'Temperature difference', unit: 'K', numberRange: [-670760, 670760]},

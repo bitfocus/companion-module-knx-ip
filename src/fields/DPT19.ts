@@ -8,6 +8,7 @@ export const DPT19: TextDPT = {
 	label: 'Date & Time',
 	valueLabel: 'YYYY-MM-DDTHH:mm:ss',
 	valueFn: (value) => new Date(value),
+	feedbackFn: () => false, // TODO Implement Feedback for Time-Types
 	subtypes: [
 		{id: '001', label: 'Date & Time'},
 	]

@@ -52,13 +52,17 @@ function constructLabel(dpt: DPT, subtype?: Subtype) {
 	}
 }
 
-function makeBooleanValueField(dpt: BooleanDPT, subtype?: BooleanSubtype): SomeCompanionInputField {
+function formatId(field_id: string, dpt: DPT, subtype: Subtype, suffix?: string) {
+	return field_id + '_' + dpt.id + '_' + subtype.id + (suffix ? '_' + suffix : '')
+}
+
+function makeBooleanField(field_id: string, dpt: BooleanDPT, subtype: BooleanSubtype, suffix?: string): SomeCompanionInputField {
 	return {
 		type: 'dropdown',
 		label: constructLabel(dpt, subtype),
-		id: 'value_' + dpt.id + '_' + subtype.id,
+		id: formatId(field_id, dpt, subtype, suffix),
 		default: '0',
-		isVisible: constructVisibilityFunction(dpt.id, subtype?.id || ''),
+		isVisible: constructVisibilityFunction(dpt.id, subtype.id),
 		choices: [
 			{
 				id: '0',
@@ -72,43 +76,43 @@ function makeBooleanValueField(dpt: BooleanDPT, subtype?: BooleanSubtype): SomeC
 	}
 }
 
-function makeNumberValueField(dpt: NumberDPT, subtype?: NumberSubtype): SomeCompanionInputField {
+function makeNumberField(field_id: string, dpt: NumberDPT, subtype: NumberSubtype, suffix?: string): SomeCompanionInputField {
 	const unit = subtype?.unit || dpt.unit;
 	const range = subtype?.projectedRange || subtype?.numberRange || dpt.projectedRange || dpt.numberRange
 
 	return {
 		type: 'number',
 		label: unit ? `${constructLabel(dpt, subtype)} (${unit})` : constructLabel(dpt, subtype),
-		id: 'value_' + dpt.id + '_' + subtype.id,
+		id: formatId(field_id, dpt, subtype, suffix),
 		default: 0,
 		range: range != undefined,
 		required: true,
-		isVisible: constructVisibilityFunction(dpt.id, subtype?.id || ''),
+		isVisible: constructVisibilityFunction(dpt.id, subtype.id),
 		min: range?.[0],
 		max: range?.[1],
 		step: subtype?.step || dpt.step || 1,
 	}
 }
 
-function makeTextValueField(dpt: TextDPT, subtype?: TextSubtype): SomeCompanionInputField {
+function makeTextField(field_id: string, dpt: TextDPT, subtype: TextSubtype, suffix?: string): SomeCompanionInputField {
 	return {
 		type: 'textinput',
 		label: constructLabel(dpt, subtype),
-		id: 'value_' + dpt.id + '_' + subtype.id,
+		id: formatId(field_id, dpt, subtype, suffix),
 		default: '',
 		required: true,
-		isVisible: constructVisibilityFunction(dpt.id, subtype?.id || ''),
+		isVisible: constructVisibilityFunction(dpt.id, subtype.id),
 	}
 }
 
-function makeSelectValueField(dpt: SelectDPT, subtype?: SelectSubtype): SomeCompanionInputField {
+function makeSelectField(field_id: string, dpt: SelectDPT, subtype: SelectSubtype, suffix?: string): SomeCompanionInputField {
 	const choices = subtype?.choices || dpt.choices;
 	return {
 		type: 'dropdown',
 		label: constructLabel(dpt, subtype),
-		id: 'value_' + dpt.id + '_' + subtype.id,
+		id: formatId(field_id, dpt, subtype, suffix),
 		default: choices.length > 0 ? choices[0].id : '',
-		isVisible: constructVisibilityFunction(dpt.id, subtype?.id || ''),
+		isVisible: constructVisibilityFunction(dpt.id, subtype.id),
 		choices,
 	}
 }
@@ -116,20 +120,37 @@ function makeSelectValueField(dpt: SelectDPT, subtype?: SelectSubtype): SomeComp
 function makeValueFields(dpt: DPT): SomeCompanionInputField[] {
 	switch (dpt.type) {
 		case 'boolean':
-			return dpt.subtypes?.map(subtype => makeBooleanValueField(dpt, subtype))
+			return dpt.subtypes?.map(subtype => makeBooleanField('value', dpt, subtype))
 		case 'number':
-			return dpt.subtypes?.map(subtype => makeNumberValueField(dpt, subtype))
+			return dpt.subtypes?.map(subtype => makeNumberField('value', dpt, subtype))
 		case 'text':
-			return dpt.subtypes?.map(subtype => makeTextValueField(dpt, subtype))
+			return dpt.subtypes?.map(subtype => makeTextField('value', dpt, subtype))
 		case 'select':
-			return dpt.subtypes?.map(subtype => makeSelectValueField(dpt, subtype))
+			return dpt.subtypes?.map(subtype => makeSelectField('value', dpt, subtype))
+	}
+}
+
+function makeFeedbackMatchFields(dpt: DPT): SomeCompanionInputField[] {
+	switch (dpt.type) {
+		case 'boolean':
+			return dpt.subtypes?.map(subtype => makeBooleanField('feedback', dpt, subtype, 'equals'))
+		case 'number':
+			return dpt.subtypes?.flatMap(subtype => [
+				makeNumberField('feedback', dpt, subtype, 'min'),
+				makeNumberField('feedback', dpt, subtype, 'max'),
+			])
+		case 'text':
+			return dpt.subtypes?.map(subtype => makeTextField('feedback', dpt, subtype, 'equals'))
+		case 'select':
+			return dpt.subtypes?.map(subtype => makeSelectField('feedback', dpt, subtype, 'equals'))
 	}
 }
 
 const DPT_VALUE_FIELDS: SomeCompanionInputField[] =
 	DPTs.flatMap(dpt => makeValueFields(dpt))
 
-const DPT_FEEDBACK_MATCH_FIELDS: SomeCompanionInputField[] = [];
+const DPT_FEEDBACK_MATCH_FIELDS: SomeCompanionInputField[] =
+	DPTs.flatMap(dpt => makeFeedbackMatchFields(dpt))
 
 function makeBooleanExtraField(dpt: DPT, field: BooleanField): SomeCompanionInputField {
 	return {
@@ -220,7 +241,6 @@ export const DPT_FEEDBACK_FIELDS = [
 	DPT_SELECT_FIELD,
 	...DPT_SUBTYPE_FIELDS,
 	...DPT_FEEDBACK_MATCH_FIELDS,
-	...DPT_EXTRA_FIELDS,
 ]
 
 export const GROUP_ADDR_FIELD: SomeCompanionInputField = {

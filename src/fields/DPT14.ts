@@ -7,6 +7,9 @@ export const DPT14: NumberDPT = {
 	id: 'DPT14',
 	label: '32-bit float',
 	valueFn: value => value,
+	feedbackFn: (value: number, feedback_fields) =>
+		value <= feedback_fields['min'] &&
+		value >= feedback_fields['max'],
 	subtypes: [
 		{id: '000', label: 'Acceleration', unit: 'ms-2'},
 		{id: '001', label: 'Acceleration Angular', unit: 'rad s-2'},

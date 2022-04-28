@@ -7,6 +7,7 @@ export const DPT10: TextDPT = {
 	id: 'DPT10',
 	label: 'Time',
 	valueFn: (value, extraFields) => extraFields['dow'] + '/' + value,
+	feedbackFn: () => false, // TODO Implement Feedback for Time-Types
 	subtypes: [
 		{id: '001', label: 'Time of day (HH:MM:SS)'},
 	],
