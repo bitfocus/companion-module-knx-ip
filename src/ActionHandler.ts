@@ -63,11 +63,21 @@ export class ActionHandler {
 		const group_addr = action.options['group_addr'] as string
 		const data_type = action.options['data_type'] as string
 		const data_subtype = action.options['data_subtype_' + data_type] as string
-		const extra_fields = this.extractExtraFields(action, data_type)
-
 		const feedback_state = this.evaluateFeedback(action)
-		let value_field = feedback_state ? 'positive' : 'negative'
+
+		const value_field = feedback_state ? 'positive' : 'negative'
 		const raw_value = action.options['value_' + data_type + '_' + data_subtype + '_' + value_field]
+
+		const extra_fields = Object.keys(action.options)
+			.reduce((filtered, key) => {
+				const prefix = 'extra_' + data_type + '_'
+				const suffix = '_' + value_field
+				if (key.startsWith(prefix) && key.endsWith(suffix)) {
+					const trimmedKey = key.substring(prefix.length, key.length - suffix.length)
+					filtered[trimmedKey] = action.options[key];
+				}
+				return filtered
+			}, {} as { [key: string]: any })
 
 		const dpt = getDpt(data_type)
 		const subtype = getDptSubtype(dpt, data_subtype)
@@ -105,7 +115,7 @@ export class ActionHandler {
 				return filtered
 			}, {} as { [key: string]: any })
 
-		const raw_value = this.connection.getLastValue(group_addr)
+		const raw_value = this.connection.getLastValue(group_addr, data_type)
 
 		const dpt = getDpt(data_type)
 		const subtype = getDptSubtype(dpt, data_subtype)

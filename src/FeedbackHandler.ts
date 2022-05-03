@@ -6,8 +6,8 @@ import {Connection} from './Connection'
 import {getDpt, getDptSubtype} from './fields/DPT'
 
 interface FeedbackOptions {
-	group_addr: string
-	data_type: string
+	feedback_group_addr: string
+	feedback_data_type: string
 }
 
 export class FeedbackHandler {
@@ -31,7 +31,14 @@ export class FeedbackHandler {
 					bgcolor: rgb(255, 255, 255)
 				},
 				options: DPT_FEEDBACK_FIELDS,
-				callback: (feedback: CompanionFeedbackEvent) => this.handle(feedback),
+				callback: (feedback: CompanionFeedbackEvent) => {
+					try {
+						return this.handle(feedback)
+					} catch (e) {
+						this.log('error', e)
+						return false
+					}
+				},
 			}
 		}
 	}
@@ -44,8 +51,6 @@ export class FeedbackHandler {
 		if (group_addr == '' || data_type == '') {
 			return false;
 		}
-
-		console.log('feedback.options', feedback.options)
 
 		const data_subtype = feedback.options['feedback_data_subtype_' + data_type] as string
 		const extra_fields = Object.keys(feedback.options)
@@ -68,13 +73,13 @@ export class FeedbackHandler {
 				return filtered
 			}, {} as { [key: string]: any })
 
-		const raw_value = this.connection.getLastValue(group_addr)
+		const raw_value = this.connection.getLastValue(group_addr, data_type)
 
 		const dpt = getDpt(data_type)
 		const subtype = getDptSubtype(dpt, data_subtype)
 		const feedback_value = dpt.feedbackFn(raw_value, feedback_fields, extra_fields, dpt, subtype)
 
-		this.log('info', '⬅ check feedback ' + JSON.stringify({
+		this.log('debug', '⬅ check feedback ' + JSON.stringify({
 			'group_addr': group_addr,
 			'data_type': data_type + '.' + data_subtype,
 			'raw_value': raw_value,
@@ -89,13 +94,13 @@ export class FeedbackHandler {
 	updateWatches() {
 		let feedbackOptions = this.allFeedbackGetter()
 			.map(feedback => feedback.options as any as FeedbackOptions)
-			.filter(options => options.group_addr != '' && options.data_type != '')
+			.filter(options => !!options.feedback_group_addr && !!options.feedback_data_type)
 
 		this.log('debug', '🎩 initializing feedback ' + JSON.stringify(
-			feedbackOptions.map(options => options.group_addr)
+			feedbackOptions.map(options => options.feedback_group_addr)
 		))
 		feedbackOptions.forEach(options => {
-			this.connection.getOrCreateDpt(options.group_addr, options.data_type)
+			this.connection.getOrCreateDpt(options.feedback_group_addr, options.feedback_data_type)
 		})
 	}
 }

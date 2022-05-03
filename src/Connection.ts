@@ -53,26 +53,28 @@ export class Connection extends EventEmitter {
 	}
 
 	getOrCreateDpt(ga: string, dpt: string): knx.Datapoint {
-		if (!(ga in this.dpts)) {
-			const dp = this.dpts[ga] = new knx.Datapoint({ga, dpt}, this.connection)
-			this.log('info', 'read dpt ' + ga)
+		const key = `${ga}-${dpt}`
+		if (!(key in this.dpts)) {
+			const dp = this.dpts[key] = new knx.Datapoint({ga, dpt}, this.connection)
+			this.log('info', `read dpt ${ga}`)
 			dp.read((_src, value) => {
-				this.log('info', 'read dpt ' + ga + ' ➡ ' + value)
-				this.dptValues[ga] = value
+				this.log('info', `read dpt ${ga} ➡ ${value}`)
+				this.dptValues[key] = value
 				this.onChanged()
 			})
 			dp.on('change', (_oldValue, newValue) => {
-				this.log('info', 'onChange dpt ' + ga + ' ➡ ' + newValue)
-				this.dptValues[ga] = newValue
+				this.log('info', `onChange dpt ${ga}@${dpt} ➡ ${newValue}`)
+				this.dptValues[key] = newValue
 				this.onChanged()
 			})
 		}
 
-		return this.dpts[ga]
+		return this.dpts[key]
 	}
 
-	getLastValue(ga: string): KnxValue | undefined {
-		return this.dptValues[ga]
+	getLastValue(ga: string, dpt: string): KnxValue | undefined {
+		const key = `${ga}-${dpt}`
+		return this.dptValues[key]
 	}
 
 	private onConnected(): void {
