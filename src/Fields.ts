@@ -42,14 +42,25 @@ function makeSubtypeSelectField(dpt: DPT): SomeCompanionInputField {
 const DPT_SUBTYPE_FIELDS: SomeCompanionInputField[] =
 	DPTs.map(dpt => makeSubtypeSelectField(dpt))
 
-function constructLabel(dpt: DPT, subtype?: Subtype) {
+function constructLabel(dpt: DPT, subtype?: Subtype, unit?: string, label_suffix?: string) {
+	let label: string
 	if (subtype) {
-		return subtype.label + ' Value'
+		label = `${subtype.label} Value`
 	} else if (dpt.valueLabel) {
-		return dpt.valueLabel
+		label = dpt.valueLabel
 	} else {
-		return dpt.label + ' Value'
+		label = `${dpt.label} Value`
 	}
+
+	if (label_suffix) {
+		label += ` ${label_suffix}`
+	}
+
+	if (unit) {
+		label += ` (${unit})`
+	}
+
+	return label
 }
 
 function formatId(field_id: string, dpt: DPT, subtype: Subtype, suffix?: string) {
@@ -76,14 +87,14 @@ function makeBooleanField(field_id: string, dpt: BooleanDPT, subtype: BooleanSub
 	}
 }
 
-function makeNumberField(field_id: string, dpt: NumberDPT, subtype: NumberSubtype, suffix?: string): SomeCompanionInputField {
+function makeNumberField(field_id: string, dpt: NumberDPT, subtype: NumberSubtype, id_suffix?: string, label_suffix?: string): SomeCompanionInputField {
 	const unit = subtype?.unit || dpt.unit;
 	const range = subtype?.projectedRange || subtype?.numberRange || dpt.projectedRange || dpt.numberRange
 
 	return {
 		type: 'number',
-		label: unit ? `${constructLabel(dpt, subtype)} (${unit})` : constructLabel(dpt, subtype),
-		id: formatId(field_id, dpt, subtype, suffix),
+		label: constructLabel(dpt, subtype, unit, label_suffix),
+		id: formatId(field_id, dpt, subtype, id_suffix),
 		default: 0,
 		range: range != undefined,
 		required: true,
@@ -136,8 +147,8 @@ function makeFeedbackMatchFields(dpt: DPT): SomeCompanionInputField[] {
 			return dpt.subtypes?.map(subtype => makeBooleanField('feedback', dpt, subtype, 'equals'))
 		case 'number':
 			return dpt.subtypes?.flatMap(subtype => [
-				makeNumberField('feedback', dpt, subtype, 'min'),
-				makeNumberField('feedback', dpt, subtype, 'max'),
+				makeNumberField('feedback', dpt, subtype, 'min', 'Min'),
+				makeNumberField('feedback', dpt, subtype, 'max', 'Max'),
 			])
 		case 'text':
 			return dpt.subtypes?.map(subtype => makeTextField('feedback', dpt, subtype, 'equals'))
