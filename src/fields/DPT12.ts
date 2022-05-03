@@ -9,8 +9,8 @@ export const DPT12: NumberDPT = {
 	numberRange: [0, 4_294_967_295],
 	valueFn: value => value,
 	feedbackFn: (value: number, feedback_fields) =>
-		value <= feedback_fields['min'] &&
-		value >= feedback_fields['max'],
+		value >= feedback_fields['min'] &&
+		value <= feedback_fields['max'],
 	subtypes: [
 		{id: '001', label: 'Counter Pulses', unit: 'pulses'},
 

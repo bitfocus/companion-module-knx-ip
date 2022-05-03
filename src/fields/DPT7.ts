@@ -9,8 +9,8 @@ export const DPT7: NumberDPT = {
 	numberRange: [0, 65_535],
 	valueFn: (value: number) => Math.round(value),
 	feedbackFn: (value: number, feedback_fields) =>
-		value <= feedback_fields['min'] &&
-		value >= feedback_fields['max'],
+		value >= feedback_fields['min'] &&
+		value <= feedback_fields['max'],
 	subtypes: [
 		{id: '600', label: 'Absolute colour temperature', unit: 'K'},
 		{id: '001', label: 'Counter Pulses', unit: 'pulses'},

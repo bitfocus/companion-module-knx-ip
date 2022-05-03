@@ -10,8 +10,8 @@ export const DPT17: NumberDPT = {
 	numberRange: [0, 63],
 	valueFn: (value) => value,
 	feedbackFn: (value: number, feedback_fields) =>
-		value <= feedback_fields['min'] &&
-		value >= feedback_fields['max'],
+		value >= feedback_fields['min'] &&
+		value <= feedback_fields['max'],
 	subtypes: [
 		{id: '001', label: 'Scene Number'},
 	]

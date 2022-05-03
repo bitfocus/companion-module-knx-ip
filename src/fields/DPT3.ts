@@ -13,8 +13,8 @@ export const DPT3: NumberDPT = {
 		decr_incr: extraFields['decr_incr'] === '1'
 	}),
 	feedbackFn: (value: number, feedback_fields) =>
-		value <= feedback_fields['min'] &&
-		value >= feedback_fields['max'],
+		value >= feedback_fields['min'] &&
+		value <= feedback_fields['max'],
 	extraFields: [{
 		id: 'decr_incr',
 		label: 'Decrease/Increase',

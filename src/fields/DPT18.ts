@@ -10,8 +10,8 @@ export const DPT18: NumberDPT = {
 	numberRange: [0, 63],
 	valueFn: (value, extraFields) => ({scenenumber: value, save_recall: extraFields['save_recall'] === '1'}),
 	feedbackFn: (value: { scenenumber: number, save_recall: boolean }, feedback_fields) =>
-		value.scenenumber <= feedback_fields['min'] &&
-		value.scenenumber >= feedback_fields['max'],
+		value.scenenumber >= feedback_fields['min'] &&
+		value.scenenumber <= feedback_fields['max'],
 	subtypes: [
 		{id: '001', label: 'Scene Control'},
 	],
