@@ -1,6 +1,6 @@
 import {CompanionFeedbackEvent, CompanionFeedbacks} from '../../../instance_skel_types'
 import {rgb} from './Color'
-import {DPT_FEEDBACK_FIELDS, GROUP_ADDR_FIELD} from './Fields'
+import {DPT_FEEDBACK_FIELDS} from './Fields'
 import {LogFunction} from './LogFunction'
 import {Connection} from './Connection'
 import {getDpt, getDptSubtype} from './fields/DPT'
@@ -30,10 +30,7 @@ export class FeedbackHandler {
 					color: rgb(0, 0, 0),
 					bgcolor: rgb(255, 255, 255)
 				},
-				options: [
-					GROUP_ADDR_FIELD,
-					...DPT_FEEDBACK_FIELDS,
-				],
+				options: DPT_FEEDBACK_FIELDS,
 				callback: (feedback: CompanionFeedbackEvent) => this.handle(feedback),
 			}
 		}
@@ -42,15 +39,15 @@ export class FeedbackHandler {
 	private handle(feedback: CompanionFeedbackEvent): boolean {
 		this.updateWatches()
 
-		const group_addr = feedback.options['group_addr'] as string
-		const data_type = feedback.options['data_type'] as string
+		const group_addr = feedback.options['feedback_group_addr'] as string
+		const data_type = feedback.options['feedback_data_type'] as string
 		if (group_addr == '' || data_type == '') {
 			return false;
 		}
 
 		console.log('feedback.options', feedback.options)
 
-		const data_subtype = feedback.options['data_subtype_' + data_type] as string
+		const data_subtype = feedback.options['feedback_data_subtype_' + data_type] as string
 		const extra_fields = Object.keys(feedback.options)
 			.reduce((filtered, key) => {
 				const prefix = 'extra_' + data_type + '_';
@@ -81,6 +78,7 @@ export class FeedbackHandler {
 			'group_addr': group_addr,
 			'data_type': data_type + '.' + data_subtype,
 			'raw_value': raw_value,
+			'feedback_fields': feedback_fields,
 			'extra_fields': extra_fields,
 			'feedback_value': feedback_value
 		}, null, 2))

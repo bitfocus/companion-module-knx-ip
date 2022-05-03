@@ -12,14 +12,20 @@ const DPT_SELECT_FIELD: SomeCompanionInputField = {
 	}))
 }
 
-function constructVisibilityFunction(dptId: string, subtypeId?: string) {
+const DPT_SELECT_FIELD_FEEDBACK: SomeCompanionInputField = {
+	...DPT_SELECT_FIELD,
+	id: 'feedback_' + DPT_SELECT_FIELD.id,
+	label: 'Feedback: ' + DPT_SELECT_FIELD.label,
+}
+
+function constructVisibilityFunction(dptId: string, subtypeId?: string, dpt_field_prefix: string = '') {
 	let body: string
 
 	if (subtypeId !== undefined) {
-		body = 'return config.options.data_type === ' + JSON.stringify(dptId) + ' && ' +
-			'config.options.data_subtype_' + dptId + ' === ' + JSON.stringify(subtypeId)
+		body = 'return config.options.' + dpt_field_prefix + 'data_type === ' + JSON.stringify(dptId) + ' && ' +
+			'config.options.' + dpt_field_prefix + 'data_subtype_' + dptId + ' === ' + JSON.stringify(subtypeId)
 	} else {
-		body = 'return config.options.data_type === ' + JSON.stringify(dptId)
+		body = 'return config.options.' + dpt_field_prefix + 'data_type === ' + JSON.stringify(dptId)
 	}
 
 	return new Function('config', body) as any
@@ -41,6 +47,14 @@ function makeSubtypeSelectField(dpt: DPT): SomeCompanionInputField {
 
 const DPT_SUBTYPE_FIELDS: SomeCompanionInputField[] =
 	DPTs.map(dpt => makeSubtypeSelectField(dpt))
+
+const DPT_SUBTYPE_FIELDS_FEEDBACK: SomeCompanionInputField[] =
+	DPTs.map(dpt => ({
+		...makeSubtypeSelectField(dpt),
+		label: dpt.id + ': Sub-Type (Feedback)',
+		id: 'feedback_data_subtype_' + dpt.id,
+		isVisible: constructVisibilityFunction(dpt.id, undefined, 'feedback_'),
+	}))
 
 function constructLabel(dpt: DPT, subtype?: Subtype, unit?: string, label_suffix?: string) {
 	let label: string
@@ -67,13 +81,13 @@ function formatId(field_id: string, dpt: DPT, subtype: Subtype, suffix?: string)
 	return field_id + '_' + dpt.id + '_' + subtype.id + (suffix ? '_' + suffix : '')
 }
 
-function makeBooleanField(field_id: string, dpt: BooleanDPT, subtype: BooleanSubtype, suffix?: string): SomeCompanionInputField {
+function makeBooleanField(field_id: string, dpt: BooleanDPT, subtype: BooleanSubtype, suffix?: string, dpt_field_prefix = ''): SomeCompanionInputField {
 	return {
 		type: 'dropdown',
 		label: constructLabel(dpt, subtype),
 		id: formatId(field_id, dpt, subtype, suffix),
 		default: '0',
-		isVisible: constructVisibilityFunction(dpt.id, subtype.id),
+		isVisible: constructVisibilityFunction(dpt.id, subtype.id, dpt_field_prefix),
 		choices: [
 			{
 				id: '0',
@@ -87,7 +101,7 @@ function makeBooleanField(field_id: string, dpt: BooleanDPT, subtype: BooleanSub
 	}
 }
 
-function makeNumberField(field_id: string, dpt: NumberDPT, subtype: NumberSubtype, id_suffix?: string, label_suffix?: string): SomeCompanionInputField {
+function makeNumberField(field_id: string, dpt: NumberDPT, subtype: NumberSubtype, id_suffix?: string, label_suffix?: string, dpt_field_prefix = ''): SomeCompanionInputField {
 	const unit = subtype?.unit || dpt.unit;
 	const range = subtype?.projectedRange || subtype?.numberRange || dpt.projectedRange || dpt.numberRange
 
@@ -98,32 +112,32 @@ function makeNumberField(field_id: string, dpt: NumberDPT, subtype: NumberSubtyp
 		default: 0,
 		range: range != undefined,
 		required: true,
-		isVisible: constructVisibilityFunction(dpt.id, subtype.id),
+		isVisible: constructVisibilityFunction(dpt.id, subtype.id, dpt_field_prefix),
 		min: range?.[0],
 		max: range?.[1],
 		step: subtype?.step || dpt.step || 1,
 	}
 }
 
-function makeTextField(field_id: string, dpt: TextDPT, subtype: TextSubtype, suffix?: string): SomeCompanionInputField {
+function makeTextField(field_id: string, dpt: TextDPT, subtype: TextSubtype, suffix?: string, dpt_field_prefix = ''): SomeCompanionInputField {
 	return {
 		type: 'textinput',
 		label: constructLabel(dpt, subtype),
 		id: formatId(field_id, dpt, subtype, suffix),
 		default: '',
 		required: true,
-		isVisible: constructVisibilityFunction(dpt.id, subtype.id),
+		isVisible: constructVisibilityFunction(dpt.id, subtype.id, dpt_field_prefix),
 	}
 }
 
-function makeSelectField(field_id: string, dpt: SelectDPT, subtype: SelectSubtype, suffix?: string): SomeCompanionInputField {
+function makeSelectField(field_id: string, dpt: SelectDPT, subtype: SelectSubtype, suffix?: string, dpt_field_prefix = ''): SomeCompanionInputField {
 	const choices = subtype?.choices || dpt.choices;
 	return {
 		type: 'dropdown',
 		label: constructLabel(dpt, subtype),
 		id: formatId(field_id, dpt, subtype, suffix),
 		default: choices.length > 0 ? choices[0].id : '',
-		isVisible: constructVisibilityFunction(dpt.id, subtype.id),
+		isVisible: constructVisibilityFunction(dpt.id, subtype.id, dpt_field_prefix),
 		choices,
 	}
 }
@@ -144,21 +158,35 @@ function makeValueFields(dpt: DPT): SomeCompanionInputField[] {
 function makeFeedbackMatchFields(dpt: DPT): SomeCompanionInputField[] {
 	switch (dpt.type) {
 		case 'boolean':
-			return dpt.subtypes?.map(subtype => makeBooleanField('feedback', dpt, subtype, 'equals'))
+			return dpt.subtypes?.map(subtype => makeBooleanField('feedback', dpt, subtype, 'equals', 'feedback_'))
 		case 'number':
 			return dpt.subtypes?.flatMap(subtype => [
-				makeNumberField('feedback', dpt, subtype, 'min', 'Min'),
-				makeNumberField('feedback', dpt, subtype, 'max', 'Max'),
+				makeNumberField('feedback', dpt, subtype, 'min', 'Min', 'feedback_'),
+				makeNumberField('feedback', dpt, subtype, 'max', 'Max', 'feedback_'),
 			])
 		case 'text':
-			return dpt.subtypes?.map(subtype => makeTextField('feedback', dpt, subtype, 'equals'))
+			return dpt.subtypes?.map(subtype => makeTextField('feedback', dpt, subtype, 'equals', 'feedback_'))
 		case 'select':
-			return dpt.subtypes?.map(subtype => makeSelectField('feedback', dpt, subtype, 'equals'))
+			return dpt.subtypes?.map(subtype => makeSelectField('feedback', dpt, subtype, 'equals', 'feedback_'))
 	}
 }
 
 const DPT_VALUE_FIELDS: SomeCompanionInputField[] =
 	DPTs.flatMap(dpt => makeValueFields(dpt))
+
+const DPT_VALUE_FIELDS_POSITIVE: SomeCompanionInputField[] =
+	DPT_VALUE_FIELDS.map(field => ({
+		...field,
+		id: field.id + '_positive',
+		label: field.label + ' - When Feedback is Positive',
+	}))
+
+const DPT_VALUE_FIELDS_NEGATIVE: SomeCompanionInputField[] =
+	DPT_VALUE_FIELDS.map(field => ({
+		...field,
+		id: field.id + '_negative',
+		label: field.label + ' - When Feedback is Negative',
+	}))
 
 const DPT_FEEDBACK_MATCH_FIELDS: SomeCompanionInputField[] =
 	DPTs.flatMap(dpt => makeFeedbackMatchFields(dpt))
@@ -241,22 +269,59 @@ function makeExtraField(dpt: DPT, field: Field): SomeCompanionInputField {
 const DPT_EXTRA_FIELDS: SomeCompanionInputField[] =
 	DPTs.flatMap(dpt => makeExtraFields(dpt))
 
+const DPT_EXTRA_FIELDS_POSITIVE: SomeCompanionInputField[] =
+	DPT_EXTRA_FIELDS.map(field => ({
+		...field,
+		id: field.id + '_positive',
+		label: field.label + ' - When Feedback is Positive',
+	}))
+
+const DPT_EXTRA_FIELDS_NEGATIVE: SomeCompanionInputField[] =
+	DPT_EXTRA_FIELDS.map(field => ({
+		...field,
+		id: field.id + '_negative',
+		label: field.label + ' - When Feedback is Negative',
+	}))
+
+const GROUP_ADDR_FIELD: SomeCompanionInputField = {
+	type: 'textwithvariables',
+	label: 'Group Address',
+	id: 'group_addr',
+	default: '',
+}
+
+const GROUP_ADDR_FIELD_FEEDBACK = {
+	...GROUP_ADDR_FIELD,
+	id: 'feedback_' + GROUP_ADDR_FIELD.id,
+	label: 'Feedback: ' + GROUP_ADDR_FIELD.label,
+}
+
 export const DPT_ACTION_FIELDS = [
+	GROUP_ADDR_FIELD,
 	DPT_SELECT_FIELD,
 	...DPT_SUBTYPE_FIELDS,
 	...DPT_VALUE_FIELDS,
 	...DPT_EXTRA_FIELDS,
 ]
 
-export const DPT_FEEDBACK_FIELDS = [
+export const DPT_TOGGLE_ACTION_FIELDS = [
+	GROUP_ADDR_FIELD,
 	DPT_SELECT_FIELD,
 	...DPT_SUBTYPE_FIELDS,
+	...DPT_VALUE_FIELDS_POSITIVE,
+	...DPT_EXTRA_FIELDS_POSITIVE,
+	...DPT_VALUE_FIELDS_NEGATIVE,
+	...DPT_EXTRA_FIELDS_NEGATIVE,
+
+	GROUP_ADDR_FIELD_FEEDBACK,
+	DPT_SELECT_FIELD_FEEDBACK,
+	...DPT_SUBTYPE_FIELDS_FEEDBACK,
 	...DPT_FEEDBACK_MATCH_FIELDS,
 ]
 
-export const GROUP_ADDR_FIELD: SomeCompanionInputField = {
-	type: 'textwithvariables',
-	label: 'Group Address',
-	id: 'group_addr',
-	default: '',
-}
+export const DPT_FEEDBACK_FIELDS = [
+	GROUP_ADDR_FIELD_FEEDBACK,
+	DPT_SELECT_FIELD_FEEDBACK,
+	...DPT_SUBTYPE_FIELDS_FEEDBACK,
+	...DPT_FEEDBACK_MATCH_FIELDS,
+]
