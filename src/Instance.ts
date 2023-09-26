@@ -1,55 +1,57 @@
-import InstanceSkel = require('../../../instance_skel')
-import {CompanionInputField} from '../../../instance_skel_types'
 import {Config, CONFIG_FIELDS} from './Config'
 import {Connection} from './Connection'
 import {FeedbackHandler} from './FeedbackHandler'
 import {ActionHandler} from './ActionHandler'
+import {InstanceBase, InstanceStatus, SomeCompanionConfigField} from '@companion-module/base'
 
-export class Instance extends InstanceSkel<Config> {
+export class Instance extends InstanceBase<Config> {
 	private connection?: Connection
 	private actionHandler: ActionHandler
 	private feedbackHandler: FeedbackHandler
 
-	init(): void {
+	async init(config: Config): Promise<void> {
 		this.log('debug', '▶️ init')
-		this.connection = new Connection(this.log)
-		this.connection.on('connecting', () => this.status(this.STATUS_WARNING, 'Connecting'))
+		this.connection = new Connection(this.log.bind(this))
+		this.connection.on('connecting', () => this.updateStatus(InstanceStatus.UnknownWarning, 'Connecting'))
 		this.connection.on('connected', () => {
-			this.status(this.STATUS_OK, 'Connected')
+			this.updateStatus(InstanceStatus.Ok, 'Connected')
 			this.feedbackHandler.updateWatches()
 		})
-		this.connection.on('disconnected', () => this.status(this.STATUS_UNKNOWN, 'Disconnected'))
+		this.connection.on('disconnected', () => this.updateStatus(InstanceStatus.UnknownWarning, 'Disconnected'))
 		this.connection.on('valueChanged', () => this.checkFeedbacks('recv'))
 
-		this.updateConfig(this.config)
+		this.actionHandler = new ActionHandler(this.log.bind(this), this.connection)
+		this.setActionDefinitions(this.actionHandler.getActionDefinitions())
 
-		this.actionHandler = new ActionHandler(this.log, this.connection)
-		this.setActions(this.actionHandler.getActionDefinitions())
-
-		this.feedbackHandler = new FeedbackHandler(this.log, this.connection, () => this.getAllFeedbacks())
+		// _getAllFeedbacks is deprecated but there is no information what should be used instead,
+		// so we continue to use this method for now to get the module up and running in companion3
+		// TODO evaluate alternative
+		this.feedbackHandler = new FeedbackHandler(this.log.bind(this), this.connection, () => this._getAllFeedbacks())
 		this.setFeedbackDefinitions(this.feedbackHandler.getFeedbackDefinitions())
+
+		await this.configUpdated(config);
 	}
 
-	destroy(): void {
+	async destroy(): Promise<void> {
 		this.log('debug', '⏯ destroying')
 		if (this.connection) {
-			this.connection.disconnect()
-				.then(() => this.log('debug', '⏹ destroyed'))
+			await this.connection.disconnect()
+			this.log('debug', '⏹ destroyed')
 		}
 	}
 
-	updateConfig(config: Config): void {
-		this.log('debug', '🔁 updateConfig=' + JSON.stringify(config))
+	async configUpdated(config: Config): Promise<void> {
+		this.log('debug', '💾 configUpdated=' + JSON.stringify(config))
 		if (this.connection) {
 			if (config.ipAddr) {
-				this.connection.connect(config.ipAddr)
+				await this.connection.connect(config.ipAddr)
 			} else {
-				this.connection.disconnect()
+				await this.connection.disconnect()
 			}
 		}
 	}
 
-	config_fields(): CompanionInputField[] {
+	public getConfigFields(): SomeCompanionConfigField[] {
 		return CONFIG_FIELDS
 	}
 }

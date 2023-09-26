@@ -10,6 +10,7 @@
 		"src/**/__mocks__/*"
 	],
 	"compilerOptions": {
+		"esModuleInterop": true,
 		"outDir": "./dist",
 		//"baseUrl": "./src/",
 		"paths": {

@@ -1,0 +1,28 @@
+{
+	"id": "companion-module-knxip",
+	"name": "KNX/IP Interface",
+	"shortname": "knxip",
+	"description": "Module for controlling KNX-Devices over KNX/IP",
+	"version": "3.0.0-0",
+	"license": "MIT",
+	"repository": "git+https://github.com/bitfocus/companion-module-knx-ip.git",
+	"bugs": "https://github.com/bitfocus/companion-module-knx-ip/issues",
+	"maintainers": [
+		{
+			"name": "Peter Körner",
+			"email": "git@mazdermind.de"
+		}
+	],
+	"legacyIds": [],
+	"runtime": {
+		"type": "node18",
+		"api": "nodejs-ipc",
+		"apiVersion": "0.0.0",
+		"entrypoint": "../dist/index.js"
+	},
+	"manufacturer": "KNX Association",
+	"products": [
+		"KNX/IP Tunnel"
+	],
+	"keywords": []
+}

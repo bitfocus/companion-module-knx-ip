@@ -1,22 +1,23 @@
-import {CompanionActionEvent, CompanionActions} from '../../../instance_skel_types'
+import type {CompanionActionEvent} from '@companion-module/base'
 import {DPT_ACTION_FIELDS, DPT_TOGGLE_ACTION_FIELDS} from './Fields'
 import {getDpt, getDptSubtype} from './fields/DPT'
 import {LogFunction} from './LogFunction'
 import {Connection} from './Connection'
+import {CompanionActionDefinitions} from '@companion-module/base/dist/module-api/action'
 
 export class ActionHandler {
 	constructor(private readonly log: LogFunction, private connection: Connection) {
 	}
 
-	getActionDefinitions(): CompanionActions {
+	getActionDefinitions(): CompanionActionDefinitions {
 		return {
 			send: {
-				label: 'Send Telegram to Group Address',
+				name: 'Send Telegram to Group Address',
 				options: DPT_ACTION_FIELDS,
 				callback: (action) => this.handle(action),
 			},
 			toggle: {
-				label: 'Send One of Two Telegram to Group Address depending on Feedback State (Toggle)',
+				name: 'Send One of Two Telegram to Group Address depending on Feedback State (Toggle)',
 				options: DPT_TOGGLE_ACTION_FIELDS,
 				callback: (action) => this.handleToggle(action),
 			}
