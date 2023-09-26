@@ -1,10 +1,12 @@
-import {CompanionInputField} from '../../../instance_skel_types'
+import {SomeCompanionConfigField} from '@companion-module/base'
 
-export const CONFIG_FIELDS: CompanionInputField[] = [
+export const CONFIG_FIELDS: SomeCompanionConfigField[] = [
 	{
 		type: 'textinput',
 		id: 'ipAddr',
 		label: 'IP-Address of Gateway or Router',
+
+		width: 12,
 	},
 ]
 

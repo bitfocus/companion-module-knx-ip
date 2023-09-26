@@ -1,8 +1,7 @@
 import {LogFunction} from './LogFunction'
 import {ConnectionTeardown} from './ConnectionTeardown'
-import {KnxValue} from 'knx'
-import knx = require('knx')
-import EventEmitter = require('events')
+import * as knx from 'knx'
+import EventEmitter from 'eventemitter3'
 
 export type DptMap = { [key: string]: knx.Datapoint }
 export type DptValueMap = { [key: string]: knx.KnxValue }
@@ -72,7 +71,7 @@ export class Connection extends EventEmitter {
 		return this.dpts[key]
 	}
 
-	getLastValue(ga: string, dpt: string): KnxValue | undefined {
+	getLastValue(ga: string, dpt: string): knx.KnxValue | undefined {
 		const key = `${ga}-${dpt}`
 		return this.dptValues[key]
 	}
@@ -87,7 +86,9 @@ export class Connection extends EventEmitter {
 		this.log('info', '🟥 disconnected')
 		this.emit('disconnected')
 
-		ConnectionTeardown.unregisterConnection(this.connection)
+		if (this.connection) {
+			ConnectionTeardown.unregisterConnection(this.connection)
+		}
 		this.connection = undefined
 	}
 

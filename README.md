@@ -1,16 +1,17 @@
-# Dev-Docs
+# KNX/IP Interface - Dev-Docs
 
 ## Getting Started
 
+- install `node` and `yarn`
 - clone repo into the `module-local-dev` folder of a companion installation
 - enter the `companion-module-knxip` folder
-- run `npx yarn install` to install the dev-dependencies
-- run `npx yarn dev` to start the hot-reload typescript-compiler
-- in another terminal, start the companion in dev-mode by running `npx yarn dev-headless`
+- run `yarn install` to install the dev-dependencies
+- run `yarn dev` to start the hot-reload typescript-compiler
+- in another terminal, start the companion in dev-mode by accessing the companion directory and running `yarn dev`
 
 ## Unit-Tests
 
-- run `npx yarn test`
+- run `yarn test`
 - To add more Tests, just create `.spec.ts` files
 - See https://jestjs.io/ for more documentation
 
