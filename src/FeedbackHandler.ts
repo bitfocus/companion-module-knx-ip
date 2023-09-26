@@ -4,18 +4,11 @@ import {Connection} from './Connection'
 import {getDpt, getDptSubtype} from './fields/DPT'
 import {CompanionFeedbackBooleanEvent, CompanionFeedbackDefinitions} from '@companion-module/base/dist/module-api/feedback'
 import {rgb} from './Color'
-import {FeedbackInstance} from '@companion-module/base/dist/host-api/api'
-
-interface FeedbackOptions {
-	feedback_group_addr: string
-	feedback_data_type: string
-}
 
 export class FeedbackHandler {
 	constructor(
 		private readonly log: LogFunction,
-		private readonly connection: Connection,
-		private readonly allFeedbackGetter: () => Pick<FeedbackInstance, 'id' | 'feedbackId' | 'controlId' | 'options'>[]
+		private readonly connection: Connection
 	) {
 	}
 
@@ -45,8 +38,6 @@ export class FeedbackHandler {
 	}
 
 	private handle(feedback: CompanionFeedbackBooleanEvent): boolean {
-		this.updateWatches()
-
 		const group_addr = feedback.options['feedback_group_addr'] as string
 		const data_type = feedback.options['feedback_data_type'] as string
 		if (group_addr == '' || data_type == '') {
@@ -74,6 +65,7 @@ export class FeedbackHandler {
 				return filtered
 			}, {} as { [key: string]: any })
 
+		this.connection.getOrCreateDpt(group_addr, data_type) // registers change-lister and reads value once
 		const raw_value = this.connection.getLastValue(group_addr, data_type)
 
 		const dpt = getDpt(data_type)
@@ -88,20 +80,7 @@ export class FeedbackHandler {
 			'extra_fields': extra_fields,
 			'feedback_value': feedback_value
 		}, null, 2))
+
 		return feedback_value
-
-	}
-
-	updateWatches() {
-		let feedbackOptions = this.allFeedbackGetter()
-			.map(feedback => feedback.options as any as FeedbackOptions)
-			.filter(options => !!options.feedback_group_addr && !!options.feedback_data_type)
-
-		this.log('debug', '🎩 initializing feedback ' + JSON.stringify(
-			feedbackOptions.map(options => options.feedback_group_addr)
-		))
-		feedbackOptions.forEach(options => {
-			this.connection.getOrCreateDpt(options.feedback_group_addr, options.feedback_data_type)
-		})
 	}
 }

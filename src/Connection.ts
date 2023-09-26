@@ -55,11 +55,9 @@ export class Connection extends EventEmitter {
 		const key = `${ga}-${dpt}`
 		if (!(key in this.dpts)) {
 			const dp = this.dpts[key] = new knx.Datapoint({ga, dpt}, this.connection)
-			this.log('info', `read dpt ${ga}`)
-			dp.read((_src, value) => {
-				this.log('info', `read dpt ${ga} ➡ ${value}`)
-				this.dptValues[key] = value
-				this.onChanged()
+			setImmediate(() => {
+				this.log('info', `read dpt ${ga}`);
+				dp.read();
 			})
 			dp.on('change', (_oldValue, newValue) => {
 				this.log('info', `onChange dpt ${ga}@${dpt} ➡ ${newValue}`)

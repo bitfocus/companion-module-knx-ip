@@ -15,7 +15,6 @@ export class Instance extends InstanceBase<Config> {
 		this.connection.on('connecting', () => this.updateStatus(InstanceStatus.UnknownWarning, 'Connecting'))
 		this.connection.on('connected', () => {
 			this.updateStatus(InstanceStatus.Ok, 'Connected')
-			this.feedbackHandler.updateWatches()
 		})
 		this.connection.on('disconnected', () => this.updateStatus(InstanceStatus.UnknownWarning, 'Disconnected'))
 		this.connection.on('valueChanged', () => this.checkFeedbacks('recv'))
@@ -23,10 +22,7 @@ export class Instance extends InstanceBase<Config> {
 		this.actionHandler = new ActionHandler(this.log.bind(this), this.connection)
 		this.setActionDefinitions(this.actionHandler.getActionDefinitions())
 
-		// _getAllFeedbacks is deprecated but there is no information what should be used instead,
-		// so we continue to use this method for now to get the module up and running in companion3
-		// TODO evaluate alternative
-		this.feedbackHandler = new FeedbackHandler(this.log.bind(this), this.connection, () => this._getAllFeedbacks())
+		this.feedbackHandler = new FeedbackHandler(this.log.bind(this), this.connection)
 		this.setFeedbackDefinitions(this.feedbackHandler.getFeedbackDefinitions())
 
 		await this.configUpdated(config);
