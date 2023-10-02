@@ -1,7 +1,7 @@
 {
 	"id": "companion-module-knxip",
 	"name": "KNX/IP Interface",
-	"shortname": "knxip",
+	"shortname": "knx-ip",
 	"description": "Module for controlling KNX-Devices over KNX/IP",
 	"version": "3.0.0-0",
 	"license": "MIT",
@@ -13,7 +13,7 @@
 			"email": "git@mazdermind.de"
 		}
 	],
-	"legacyIds": [],
+	"legacyIds": ["knx-ip", "knxip"],
 	"runtime": {
 		"type": "node18",
 		"api": "nodejs-ipc",
