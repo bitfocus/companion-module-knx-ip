@@ -6,21 +6,15 @@
 		"moduleResolution": "node",
 		"sourceMap": true,
 		"paths": {
-			"*": [
-				"../node_modules/*"
-			]
+			"*": ["../node_modules/*"]
 		},
 		"declaration": true,
 		"importHelpers": true,
 		"listFiles": false,
 		"traceResolution": false,
 		"pretty": true,
-		"lib": [
-			"es2019"
-		],
-		"types": [
-			"node"
-		],
+		"lib": ["es2019"],
+		"types": ["node"],
 		//"strict": true,
 		"alwaysStrict": false,
 		"forceConsistentCasingInFileNames": true,

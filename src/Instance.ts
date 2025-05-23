@@ -1,8 +1,8 @@
-import {Config, CONFIG_FIELDS} from './Config'
-import {Connection} from './Connection'
-import {FeedbackHandler} from './FeedbackHandler'
-import {ActionHandler} from './ActionHandler'
-import {InstanceBase, InstanceStatus, SomeCompanionConfigField} from '@companion-module/base'
+import { Config, CONFIG_FIELDS } from './Config'
+import { Connection } from './Connection'
+import { FeedbackHandler } from './FeedbackHandler'
+import { ActionHandler } from './ActionHandler'
+import { InstanceBase, InstanceStatus, SomeCompanionConfigField } from '@companion-module/base'
 
 export class Instance extends InstanceBase<Config> {
 	private connection?: Connection
@@ -25,7 +25,7 @@ export class Instance extends InstanceBase<Config> {
 		this.feedbackHandler = new FeedbackHandler(this.log.bind(this), this.connection)
 		this.setFeedbackDefinitions(this.feedbackHandler.getFeedbackDefinitions())
 
-		await this.configUpdated(config);
+		await this.configUpdated(config)
 	}
 
 	async destroy(): Promise<void> {

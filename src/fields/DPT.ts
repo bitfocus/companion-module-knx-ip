@@ -1,31 +1,37 @@
-import {DPT1} from './DPT1'
-import {DPT2} from './DPT2'
-import {DPT3} from './DPT3'
-import {DPT4} from './DPT4'
-import {DPT5} from './DPT5'
-import {DPT6} from './DPT6'
-import {DPT7} from './DPT7'
-import {DPT8} from './DPT8'
-import {DPT9} from './DPT9'
-import {DPT10} from './DPT10'
-import {DPT11} from './DPT11'
-import {DPT12} from './DPT12'
-import {DPT13} from './DPT13'
-import {DPT14} from './DPT14'
-import {DPT16} from './DPT16'
-import {DPT17} from './DPT17'
-import {DPT18} from './DPT18'
-import {DPT19} from './DPT19'
-import {DPT232} from './DPT232'
+import { DPT1 } from './DPT1'
+import { DPT2 } from './DPT2'
+import { DPT3 } from './DPT3'
+import { DPT4 } from './DPT4'
+import { DPT5 } from './DPT5'
+import { DPT6 } from './DPT6'
+import { DPT7 } from './DPT7'
+import { DPT8 } from './DPT8'
+import { DPT9 } from './DPT9'
+import { DPT10 } from './DPT10'
+import { DPT11 } from './DPT11'
+import { DPT12 } from './DPT12'
+import { DPT13 } from './DPT13'
+import { DPT14 } from './DPT14'
+import { DPT16 } from './DPT16'
+import { DPT17 } from './DPT17'
+import { DPT18 } from './DPT18'
+import { DPT19 } from './DPT19'
+import { DPT232 } from './DPT232'
 
 export type FieldValues = { [key: string]: any }
 export type ValueFunction = (value: any, extraFields: FieldValues, dpt: DPT, subtype: Subtype) => any
-export type FeedbackFunction = (value: any, feedback_fields: FieldValues, extra_fields: FieldValues, dpt: DPT, subtype: Subtype) => boolean
+export type FeedbackFunction = (
+	value: any,
+	feedback_fields: FieldValues,
+	extra_fields: FieldValues,
+	dpt: DPT,
+	subtype: Subtype
+) => boolean
 
 // Field Specs
 interface FieldBase {
-	id: string;
-	label: string;
+	id: string
+	label: string
 }
 
 export interface BooleanField extends FieldBase {
@@ -47,16 +53,16 @@ export interface TextField extends FieldBase {
 
 export interface SelectField extends FieldBase {
 	type: 'select'
-	choices: { id: string, label: string }[]
+	choices: { id: string; label: string }[]
 }
 
-export type Field = BooleanField | NumberField | TextField | SelectField;
+export type Field = BooleanField | NumberField | TextField | SelectField
 
 // DPTs
 interface DPTBase {
-	id: string;
-	label: string;
-	valueLabel?: string;
+	id: string
+	label: string
+	valueLabel?: string
 
 	valueFn: ValueFunction
 	feedbackFn: FeedbackFunction
@@ -101,22 +107,21 @@ export interface TextDPT extends DPTBase {
 	subtypes?: TextSubtype[]
 }
 
-export interface TextSubtype extends SubtypeBase {
-}
+export interface TextSubtype extends SubtypeBase {}
 
 export interface SelectDPT extends DPTBase {
 	type: 'select'
 	subtypes?: SelectSubtype[]
-	choices: { id: string, label: string }[]
+	choices: { id: string; label: string }[]
 }
 
 export interface SelectSubtype extends SubtypeBase {
-	choices: { id: string, label: string }[]
+	choices: { id: string; label: string }[]
 }
 
 // Aggregate
-export type DPT = BooleanDPT | NumberDPT | TextDPT | SelectDPT;
-export type Subtype = BooleanSubtype | NumberSubtype | TextSubtype | SelectSubtype;
+export type DPT = BooleanDPT | NumberDPT | TextDPT | SelectDPT
+export type Subtype = BooleanSubtype | NumberSubtype | TextSubtype | SelectSubtype
 export const DPTs: DPT[] = [
 	DPT1,
 	DPT2,
@@ -140,9 +145,9 @@ export const DPTs: DPT[] = [
 ]
 
 export function getDpt(type_id: string): DPT {
-	return DPTs.filter(dpt => dpt.id === type_id)[0]
+	return DPTs.filter((dpt) => dpt.id === type_id)[0]
 }
 
 export function getDptSubtype(dpt: DPT, subtype_id: string): SubtypeBase {
-	return dpt.subtypes.filter(subtype => subtype.id === subtype_id)[0]
+	return dpt.subtypes.filter((subtype) => subtype.id === subtype_id)[0]
 }

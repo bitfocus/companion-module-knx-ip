@@ -1,5 +1,5 @@
-import {LogFunction} from './LogFunction'
-import {ConnectionTeardown} from './ConnectionTeardown'
+import { LogFunction } from './LogFunction'
+import { ConnectionTeardown } from './ConnectionTeardown'
 import * as knx from 'knx'
 import EventEmitter from 'eventemitter3'
 
@@ -17,16 +17,16 @@ export class Connection extends EventEmitter {
 	}
 
 	get isConnected(): boolean {
-		return this.connected;
+		return this.connected
 	}
 
 	async connect(ipAddr: string): Promise<void> {
-		await this.disconnect();
+		await this.disconnect()
 
 		this.log('info', '🟨 connecting to ' + ipAddr)
 		this.emit('connecting')
 
-		this.connection = new knx.Connection({ipAddr, manualConnect: true})
+		this.connection = new knx.Connection({ ipAddr, manualConnect: true })
 		ConnectionTeardown.registerConnection(this.connection)
 
 		this.connection.on('connected', () => this.onConnected())
@@ -39,7 +39,7 @@ export class Connection extends EventEmitter {
 			this.emit('disconnecting')
 			this.connected = false
 
-			return new Promise<void>(resolve => {
+			return new Promise<void>((resolve) => {
 				this.connection!.off()
 				this.connection!.Disconnect(() => {
 					this.onDisconnected()
@@ -54,7 +54,7 @@ export class Connection extends EventEmitter {
 	getOrCreateDpt(ga: string, dpt: string): knx.Datapoint {
 		const key = `${ga}-${dpt}`
 		if (!(key in this.dpts)) {
-			const dp = this.dpts[key] = new knx.Datapoint({ga, dpt, autoread: true}, this.connection)
+			const dp = (this.dpts[key] = new knx.Datapoint({ ga, dpt, autoread: true }, this.connection))
 			dp.on('change', (_oldValue, newValue) => {
 				this.log('info', `onChange dpt ${ga}@${dpt} ➡ ${newValue}`)
 				this.dptValues[key] = newValue

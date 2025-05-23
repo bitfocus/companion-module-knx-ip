@@ -3,7 +3,7 @@
 Should work with all standard conform KNX/IP Gateways. Tested with
 
 - [MDT SCN-IP000.03](https://www.mdt.de/produkte/produktdetail.html?tx_mdtproducts_detail%5Baction%5D=detail&tx_mdtproducts_detail%5Bcontroller%5D=Productseries&tx_mdtproducts_detail%5Bseries%5D=60&cHash=127caad8851b07bc2d00c6643c339fc5)
-- *If you tested it with another Gateway [Open an Issue](https://github.com/bitfocus/companion-module-knx-ip/issues/new)*
+- _If you tested it with another Gateway [Open an Issue](https://github.com/bitfocus/companion-module-knx-ip/issues/new)_
 
 ## Features
 
@@ -36,4 +36,4 @@ The following Data-Types with lots of subtypes are supported:
 - DPT18: Scene Control
 - DPT19: Date & Time
 - DPT232: RGB Color
-- *If you need another Data-Type, [Open an Issue](https://github.com/bitfocus/companion-module-knx-ip/issues/new)*
+- _If you need another Data-Type, [Open an Issue](https://github.com/bitfocus/companion-module-knx-ip/issues/new)_

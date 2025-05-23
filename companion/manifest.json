@@ -21,8 +21,6 @@
 		"entrypoint": "../dist/index.js"
 	},
 	"manufacturer": "KNX Association",
-	"products": [
-		"KNX/IP Tunnel"
-	],
+	"products": ["KNX/IP Tunnel"],
 	"keywords": []
 }

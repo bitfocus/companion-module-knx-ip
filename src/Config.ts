@@ -1,4 +1,4 @@
-import {SomeCompanionConfigField} from '@companion-module/base'
+import { SomeCompanionConfigField } from '@companion-module/base'
 
 export const CONFIG_FIELDS: SomeCompanionConfigField[] = [
 	{

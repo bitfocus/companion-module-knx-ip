@@ -1,29 +1,16 @@
 {
 	"extends": "./tsconfig.preset.json",
-	"include": [
-		"src/**/*.ts"
-	],
-	"exclude": [
-		"node_modules/**",
-		"src/**/*spec.ts",
-		"src/**/__tests__/*",
-		"src/**/__mocks__/*"
-	],
+	"include": ["src/**/*.ts"],
+	"exclude": ["node_modules/**", "src/**/*spec.ts", "src/**/__tests__/*", "src/**/__mocks__/*"],
 	"compilerOptions": {
 		"esModuleInterop": true,
 		"outDir": "./dist",
 		//"baseUrl": "./src/",
 		"paths": {
-			"*": [
-				"./node_modules/*"
-			],
-			"{{PACKAGE-NAME}}": [
-				"./src/index.ts"
-			]
+			"*": ["./node_modules/*"],
+			"{{PACKAGE-NAME}}": ["./src/index.ts"]
 		},
-		"types": [
-			"node"
-		],
+		"types": ["node"],
 		"declaration": false
 	}
 }

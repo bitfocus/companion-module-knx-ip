@@ -1,17 +1,38 @@
-import {BooleanDPT, BooleanField, BooleanSubtype, DPT, DPTs, Field, NumberDPT, NumberField, NumberSubtype, SelectDPT, SelectField, SelectSubtype, Subtype, TextDPT, TextField, TextSubtype} from './fields/DPT'
-import {SomeCompanionActionInputField} from '@companion-module/base/dist/module-api/action'
-import {CompanionInputFieldDropdown, CompanionInputFieldNumber, CompanionInputFieldTextInput} from '@companion-module/base/dist/module-api/input'
-import {SomeCompanionFeedbackInputField} from '@companion-module/base'
+import {
+	BooleanDPT,
+	BooleanField,
+	BooleanSubtype,
+	DPT,
+	DPTs,
+	Field,
+	NumberDPT,
+	NumberField,
+	NumberSubtype,
+	SelectDPT,
+	SelectField,
+	SelectSubtype,
+	Subtype,
+	TextDPT,
+	TextField,
+	TextSubtype,
+} from './fields/DPT'
+import { SomeCompanionActionInputField } from '@companion-module/base/dist/module-api/action'
+import {
+	CompanionInputFieldDropdown,
+	CompanionInputFieldNumber,
+	CompanionInputFieldTextInput,
+} from '@companion-module/base/dist/module-api/input'
+import { SomeCompanionFeedbackInputField } from '@companion-module/base'
 
 const DPT_SELECT_FIELD: CompanionInputFieldDropdown = {
 	type: 'dropdown',
 	label: 'Data-Type',
 	id: 'data_type',
 	default: DPTs[0].id,
-	choices: DPTs.map(dpt => ({
+	choices: DPTs.map((dpt) => ({
 		id: dpt.id,
-		label: dpt.id + ': ' + dpt.label
-	}))
+		label: dpt.id + ': ' + dpt.label,
+	})),
 }
 
 const DPT_SELECT_FIELD_FEEDBACK: CompanionInputFieldDropdown = {
@@ -24,8 +45,18 @@ function constructVisibilityFunction(dptId: string, subtypeId?: string, dpt_fiel
 	let body: string
 
 	if (subtypeId !== undefined) {
-		body = 'return config.' + dpt_field_prefix + 'data_type === ' + JSON.stringify(dptId) + ' && ' +
-			'config.' + dpt_field_prefix + 'data_subtype_' + dptId + ' === ' + JSON.stringify(subtypeId)
+		body =
+			'return config.' +
+			dpt_field_prefix +
+			'data_type === ' +
+			JSON.stringify(dptId) +
+			' && ' +
+			'config.' +
+			dpt_field_prefix +
+			'data_subtype_' +
+			dptId +
+			' === ' +
+			JSON.stringify(subtypeId)
 	} else {
 		body = 'return config.' + dpt_field_prefix + 'data_type === ' + JSON.stringify(dptId)
 	}
@@ -40,23 +71,21 @@ function makeSubtypeSelectField(dpt: DPT): SomeCompanionFeedbackInputField {
 		id: 'data_subtype_' + dpt.id,
 		default: dpt.subtypes[0].id,
 		isVisible: constructVisibilityFunction(dpt.id),
-		choices: dpt.subtypes.map(subtype => ({
+		choices: dpt.subtypes.map((subtype) => ({
 			id: subtype.id,
 			label: subtype.id + ': ' + subtype.label,
-		}))
+		})),
 	}
 }
 
-const DPT_SUBTYPE_FIELDS: SomeCompanionFeedbackInputField[] =
-	DPTs.map(dpt => makeSubtypeSelectField(dpt))
+const DPT_SUBTYPE_FIELDS: SomeCompanionFeedbackInputField[] = DPTs.map((dpt) => makeSubtypeSelectField(dpt))
 
-const DPT_SUBTYPE_FIELDS_FEEDBACK: SomeCompanionFeedbackInputField[] =
-	DPTs.map(dpt => ({
-		...makeSubtypeSelectField(dpt),
-		label: dpt.id + ': Sub-Type (Feedback)',
-		id: 'feedback_data_subtype_' + dpt.id,
-		isVisible: constructVisibilityFunction(dpt.id, undefined, 'feedback_'),
-	}))
+const DPT_SUBTYPE_FIELDS_FEEDBACK: SomeCompanionFeedbackInputField[] = DPTs.map((dpt) => ({
+	...makeSubtypeSelectField(dpt),
+	label: dpt.id + ': Sub-Type (Feedback)',
+	id: 'feedback_data_subtype_' + dpt.id,
+	isVisible: constructVisibilityFunction(dpt.id, undefined, 'feedback_'),
+}))
 
 function constructLabel(dpt: DPT, subtype?: Subtype, unit?: string, label_suffix?: string) {
 	let label: string
@@ -83,7 +112,13 @@ function formatId(field_id: string, dpt: DPT, subtype: Subtype, suffix?: string)
 	return field_id + '_' + dpt.id + '_' + subtype.id + (suffix ? '_' + suffix : '')
 }
 
-function makeBooleanField(field_id: string, dpt: BooleanDPT, subtype: BooleanSubtype, suffix?: string, dpt_field_prefix = ''): CompanionInputFieldDropdown {
+function makeBooleanField(
+	field_id: string,
+	dpt: BooleanDPT,
+	subtype: BooleanSubtype,
+	suffix?: string,
+	dpt_field_prefix = ''
+): CompanionInputFieldDropdown {
 	return {
 		type: 'dropdown',
 		label: constructLabel(dpt, subtype),
@@ -99,12 +134,19 @@ function makeBooleanField(field_id: string, dpt: BooleanDPT, subtype: BooleanSub
 				id: '1',
 				label: subtype?.booleanLabels?.[1] || dpt.booleanLabels[1],
 			},
-		]
+		],
 	}
 }
 
-function makeNumberField(field_id: string, dpt: NumberDPT, subtype: NumberSubtype, id_suffix?: string, label_suffix?: string, dpt_field_prefix = ''): CompanionInputFieldNumber {
-	const unit = subtype?.unit || dpt.unit;
+function makeNumberField(
+	field_id: string,
+	dpt: NumberDPT,
+	subtype: NumberSubtype,
+	id_suffix?: string,
+	label_suffix?: string,
+	dpt_field_prefix = ''
+): CompanionInputFieldNumber {
+	const unit = subtype?.unit || dpt.unit
 	const range = subtype?.projectedRange || subtype?.numberRange || dpt.projectedRange || dpt.numberRange
 
 	return {
@@ -121,7 +163,13 @@ function makeNumberField(field_id: string, dpt: NumberDPT, subtype: NumberSubtyp
 	}
 }
 
-function makeTextField(field_id: string, dpt: TextDPT, subtype: TextSubtype, suffix?: string, dpt_field_prefix = ''): CompanionInputFieldTextInput {
+function makeTextField(
+	field_id: string,
+	dpt: TextDPT,
+	subtype: TextSubtype,
+	suffix?: string,
+	dpt_field_prefix = ''
+): CompanionInputFieldTextInput {
 	return {
 		type: 'textinput',
 		label: constructLabel(dpt, subtype),
@@ -132,8 +180,14 @@ function makeTextField(field_id: string, dpt: TextDPT, subtype: TextSubtype, suf
 	}
 }
 
-function makeSelectField(field_id: string, dpt: SelectDPT, subtype: SelectSubtype, suffix?: string, dpt_field_prefix = ''): CompanionInputFieldDropdown {
-	const choices = subtype?.choices || dpt.choices;
+function makeSelectField(
+	field_id: string,
+	dpt: SelectDPT,
+	subtype: SelectSubtype,
+	suffix?: string,
+	dpt_field_prefix = ''
+): CompanionInputFieldDropdown {
+	const choices = subtype?.choices || dpt.choices
 	return {
 		type: 'dropdown',
 		label: constructLabel(dpt, subtype),
@@ -147,51 +201,53 @@ function makeSelectField(field_id: string, dpt: SelectDPT, subtype: SelectSubtyp
 function makeValueFields(dpt: DPT): SomeCompanionActionInputField[] {
 	switch (dpt.type) {
 		case 'boolean':
-			return dpt.subtypes?.map(subtype => makeBooleanField('value', dpt, subtype))
+			return dpt.subtypes?.map((subtype) => makeBooleanField('value', dpt, subtype))
 		case 'number':
-			return dpt.subtypes?.map(subtype => makeNumberField('value', dpt, subtype))
+			return dpt.subtypes?.map((subtype) => makeNumberField('value', dpt, subtype))
 		case 'text':
-			return dpt.subtypes?.map(subtype => makeTextField('value', dpt, subtype))
+			return dpt.subtypes?.map((subtype) => makeTextField('value', dpt, subtype))
 		case 'select':
-			return dpt.subtypes?.map(subtype => makeSelectField('value', dpt, subtype))
+			return dpt.subtypes?.map((subtype) => makeSelectField('value', dpt, subtype))
 	}
 }
 
 function makeFeedbackMatchFields(dpt: DPT): SomeCompanionFeedbackInputField[] {
 	switch (dpt.type) {
 		case 'boolean':
-			return dpt.subtypes?.map(subtype => makeBooleanField('feedback', dpt, subtype, 'equals', 'feedback_'))
+			return dpt.subtypes?.map((subtype) => makeBooleanField('feedback', dpt, subtype, 'equals', 'feedback_'))
 		case 'number':
-			return dpt.subtypes?.flatMap(subtype => [
+			return dpt.subtypes?.flatMap((subtype) => [
 				makeNumberField('feedback', dpt, subtype, 'min', 'Min', 'feedback_'),
 				makeNumberField('feedback', dpt, subtype, 'max', 'Max', 'feedback_'),
 			])
 		case 'text':
-			return dpt.subtypes?.map(subtype => makeTextField('feedback', dpt, subtype, 'equals', 'feedback_'))
+			return dpt.subtypes?.map((subtype) => makeTextField('feedback', dpt, subtype, 'equals', 'feedback_'))
 		case 'select':
-			return dpt.subtypes?.map(subtype => makeSelectField('feedback', dpt, subtype, 'equals', 'feedback_'))
+			return dpt.subtypes?.map((subtype) => makeSelectField('feedback', dpt, subtype, 'equals', 'feedback_'))
 	}
 }
 
-const DPT_VALUE_FIELDS: SomeCompanionActionInputField[] =
-	DPTs.flatMap(dpt => makeValueFields(dpt))
+const DPT_VALUE_FIELDS: SomeCompanionActionInputField[] = DPTs.flatMap((dpt) => makeValueFields(dpt))
 
-const DPT_VALUE_FIELDS_POSITIVE: SomeCompanionActionInputField[] =
-	DPT_VALUE_FIELDS.map(field => ({
-		...field,
-		id: field.id + '_positive',
-		label: field.label + ' - When Feedback is Positive',
-	} as SomeCompanionActionInputField))
+const DPT_VALUE_FIELDS_POSITIVE: SomeCompanionActionInputField[] = DPT_VALUE_FIELDS.map(
+	(field) =>
+		({
+			...field,
+			id: field.id + '_positive',
+			label: field.label + ' - When Feedback is Positive',
+		}) as SomeCompanionActionInputField
+)
 
-const DPT_VALUE_FIELDS_NEGATIVE: SomeCompanionActionInputField[] =
-	DPT_VALUE_FIELDS.map(field => ({
-		...field,
-		id: field.id + '_negative',
-		label: field.label + ' - When Feedback is Negative',
-	} as SomeCompanionActionInputField))
+const DPT_VALUE_FIELDS_NEGATIVE: SomeCompanionActionInputField[] = DPT_VALUE_FIELDS.map(
+	(field) =>
+		({
+			...field,
+			id: field.id + '_negative',
+			label: field.label + ' - When Feedback is Negative',
+		}) as SomeCompanionActionInputField
+)
 
-const DPT_FEEDBACK_MATCH_FIELDS: SomeCompanionFeedbackInputField[] =
-	DPTs.flatMap(dpt => makeFeedbackMatchFields(dpt))
+const DPT_FEEDBACK_MATCH_FIELDS: SomeCompanionFeedbackInputField[] = DPTs.flatMap((dpt) => makeFeedbackMatchFields(dpt))
 
 function makeBooleanExtraField(dpt: DPT, field: BooleanField): CompanionInputFieldDropdown {
 	return {
@@ -203,13 +259,13 @@ function makeBooleanExtraField(dpt: DPT, field: BooleanField): CompanionInputFie
 		choices: [
 			{
 				id: '0',
-				label: field.booleanLabels[0]
+				label: field.booleanLabels[0],
 			},
 			{
 				id: '1',
-				label: field.booleanLabels[1]
+				label: field.booleanLabels[1],
 			},
-		]
+		],
 	}
 }
 
@@ -224,7 +280,7 @@ function makeNumberExtraField(dpt: DPT, field: NumberField): CompanionInputField
 		isVisible: constructVisibilityFunction(dpt.id),
 		min: field?.projectedRange?.[0] || field?.numberRange[0] || 0,
 		max: field?.projectedRange?.[1] || field?.numberRange[1] || 100,
-		step: field.step || 1
+		step: field.step || 1,
 	}
 }
 
@@ -240,7 +296,7 @@ function makeTextExtraField(dpt: DPT, field: TextField): CompanionInputFieldText
 }
 
 function makeSelectExtraField(dpt: DPT, field: SelectField): CompanionInputFieldDropdown {
-	const choices = field.choices;
+	const choices = field.choices
 	return {
 		type: 'dropdown',
 		label: field.label,
@@ -252,7 +308,7 @@ function makeSelectExtraField(dpt: DPT, field: SelectField): CompanionInputField
 }
 
 function makeExtraFields(dpt: DPT): SomeCompanionActionInputField[] {
-	return dpt.extraFields?.map(field => makeExtraField(dpt, field)) || [];
+	return dpt.extraFields?.map((field) => makeExtraField(dpt, field)) || []
 }
 
 function makeExtraField(dpt: DPT, field: Field): SomeCompanionActionInputField {
@@ -268,22 +324,25 @@ function makeExtraField(dpt: DPT, field: Field): SomeCompanionActionInputField {
 	}
 }
 
-const DPT_EXTRA_FIELDS: SomeCompanionActionInputField[] =
-	DPTs.flatMap(dpt => makeExtraFields(dpt))
+const DPT_EXTRA_FIELDS: SomeCompanionActionInputField[] = DPTs.flatMap((dpt) => makeExtraFields(dpt))
 
-const DPT_EXTRA_FIELDS_POSITIVE: SomeCompanionActionInputField[] =
-	DPT_EXTRA_FIELDS.map(field => ({
-		...field,
-		id: field.id + '_positive',
-		label: field.label + ' - When Feedback is Positive',
-	} as SomeCompanionActionInputField))
+const DPT_EXTRA_FIELDS_POSITIVE: SomeCompanionActionInputField[] = DPT_EXTRA_FIELDS.map(
+	(field) =>
+		({
+			...field,
+			id: field.id + '_positive',
+			label: field.label + ' - When Feedback is Positive',
+		}) as SomeCompanionActionInputField
+)
 
-const DPT_EXTRA_FIELDS_NEGATIVE: SomeCompanionActionInputField[] =
-	DPT_EXTRA_FIELDS.map(field => ({
-		...field,
-		id: field.id + '_negative',
-		label: field.label + ' - When Feedback is Negative',
-	} as SomeCompanionActionInputField))
+const DPT_EXTRA_FIELDS_NEGATIVE: SomeCompanionActionInputField[] = DPT_EXTRA_FIELDS.map(
+	(field) =>
+		({
+			...field,
+			id: field.id + '_negative',
+			label: field.label + ' - When Feedback is Negative',
+		}) as SomeCompanionActionInputField
+)
 
 const GROUP_ADDR_FIELD: CompanionInputFieldTextInput = {
 	type: 'textinput',
