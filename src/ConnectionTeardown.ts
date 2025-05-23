@@ -1,5 +1,5 @@
-import knx = require('knx')
-import * as AsyncExitHook from 'async-exit-hook'
+import * as knx from 'knx'
+import AsyncExitHook from 'async-exit-hook'
 
 AsyncExitHook(async cb => {
 	await ConnectionTeardown.teardown()
@@ -31,7 +31,7 @@ class ConnectionTeardownManager {
 
 	private async disconnectOne(connection: knx.Connection, index: number): Promise<void> {
 		console.log('⚠️ Disconnecting #' + index)
-		return new Promise((resolve, _reject) => {
+		return new Promise<void>((resolve, _reject) => {
 			console.log('⚠️ Disconnected #' + index);
 			connection.Disconnect(() => resolve(undefined))
 		})
