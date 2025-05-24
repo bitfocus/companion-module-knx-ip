@@ -12,14 +12,14 @@
 		"test": "jest",
 		"format": "prettier --write \"**/*.{js,ts,json,md}\""
 	},
-		"repository": {
+	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/bitfocus/companion-module-knx-ip.git"
 	},
 	"dependencies": {
 		"@companion-module/base": "^1.12.0",
 		"async-exit-hook": "^2.0.1",
-		"knx": "git+https://bitbucket.org/ekarak/knx.js.git"
+		"knx": "^2.5.4"
 	},
 	"devDependencies": {
 		"@companion-module/tools": "^2.3.0",
