@@ -22,7 +22,7 @@
 		"knx": "^2.5.4"
 	},
 	"devDependencies": {
-		"@companion-module/tools": "^2.3.0",
+		"@companion-module/tools": "^2.6.1",
 		"@types/async-exit-hook": "^2.0.0",
 		"@types/jest": "^29.5.5",
 		"@types/node": "^18.18.0",
